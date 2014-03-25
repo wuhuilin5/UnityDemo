@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 using UnityEditor;
@@ -40,7 +40,7 @@ public class MyEditor : Editor
     {
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
         Debug.Log("Selected Folder: " + path);
-
+		
         if (path.Length != 0)
         {
             path = path.Replace("Assets/", "");
