@@ -10,7 +10,7 @@ public class MyEditor : Editor
     [MenuItem("Assets/Build AssetBundle From Selection - Track dependencies" )]
     static void ExportResource()
     {
-        string path = EditorUtility.SaveFilePanel("Save Resource", "../../Unity/Resources/Prefab", "New Resource", "unity3d");
+        string path = EditorUtility.SaveFilePanel("Save Resource", "/Res/Prefab", "New Resource", "unity3d");
         Debug.Log("path: " + path);
  
         if (path.Length != 0)
@@ -171,4 +171,18 @@ public class MyEditor : Editor
         AssetDatabase.Refresh();
         Debug.Log("export success");
     }
+	
+	[MenuItem( "Assets/Export Scene")]
+	static void ExportScene()
+	{
+		string path = EditorUtility.SaveFilePanel("Save Resource", "/Res/Prefab", "New Resource", "unity3d");
+		if( path.Length != 0 )
+		{
+			//Object[] seletion = Selection.GetFiltered(typeof(object), SelectionMode.DeepAssets );
+			
+			string[] scenes = {"Assets/UnityDemo.unity"};
+			
+			BuildPipeline.BuildPlayer( scenes, path, BuildTarget.StandaloneWindows, BuildOptions.BuildAdditionalStreamedScenes );
+		}
+	}
 }
