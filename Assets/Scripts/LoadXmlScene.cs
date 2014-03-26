@@ -13,17 +13,14 @@ public class LoadXmlScene : MonoBehaviour {
         LoadScene();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
     private void LoadScene()
     {
 #if UNITY_EDITOR
         string filepath = Application.dataPath + "/StreamingAssets/UnityDemo.xml";
 #elif UNITY_IPHONE
         string filepath = Application.dataPath + "/Raw" + "UnityDemo.xml";
+#else
+		string filepath = Application.dataPath + "/StreamingAssets/UnityDemo.xml";
 #endif
         if (File.Exists(filepath)) 
         {

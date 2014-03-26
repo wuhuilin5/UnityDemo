@@ -47,6 +47,7 @@
      <Compile Include="Assets\Scripts\LoadScene.cs" />
      <Compile Include="Assets\Scripts\LoadXmlScene.cs" />
      <Compile Include="Assets\Scripts\ResUpdate.cs" />
+     <Compile Include="Assets\Scripts\TestBinding.cs" />
      <None Include="Assets\Res\version.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,35 +7,48 @@ using System.Xml;
 
 public class MyEditor : Editor
 {
-    [MenuItem("Assets/Build AssetBundle From Selection - Track dependencies" )]
-    static void ExportResource()
+    [MenuItem("Custom Editor/Create AssetBundle Main" )]
+	static void CreateAssetBundlesMain()
     {
-        string path = EditorUtility.SaveFilePanel("Save Resource", "/Res/Prefab", "New Resource", "unity3d");
-        Debug.Log("path: " + path);
- 
-        if (path.Length != 0)
-        {
-            Object[] selection = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+       	Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);		
+		foreach( Object obj in SelectedAsset )
+		{
+			string sourcePath = AssetDatabase.GetAssetPath( obj );
+			string targetPath = Application.dataPath + "/StreamingAssets/" + obj.name + ".assetbundle";
+			
+			Debug.Log( "sourcePath: " + sourcePath );
+			
+			//移动平台需要在最后添加一个参数：android: BuildTarget.Android, ios: BuildTarget.iPhone
+        	bool ret = BuildPipeline.BuildAssetBundle( obj, null, targetPath, BuildAssetBundleOptions.CollectDependencies );
+			
+			if( ret ){
+				Debug.Log( obj.name + " export successed! " + targetPath );
+			}else{
+				Debug.Log( obj.name + " export failed");
+			}
+		}   
+		
+		AssetDatabase.Refresh();
+	}
 
-            BuildPipeline.BuildAssetBundle(Selection.activeObject, selection, path, BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets);
-            Selection.objects = selection;
-            Debug.Log("Export AssetBundle " + path);
-        }
+    [MenuItem("Custom Editor/Create AssetBundle All")]
+    static void CreateAssetBundleAll()
+    {
+		Caching.CleanCache();
+		
+		string targetPath = Application.dataPath + "/StreamingAssets/all.assetbundle";
+		Object[] SelectedAssets = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets );
+	    
+		bool ret = BuildPipeline.BuildAssetBundle( null, SelectedAssets, targetPath, BuildAssetBundleOptions.CollectDependencies );
+		if( ret ){
+			AssetDatabase.Refresh();		
+			Debug.Log( "Create AssetBundle All Successed." );
+		}else{
+			Debug.Log( "Create AssetBundle All failed." );
+		}
     }
 
-    [MenuItem("Assets/Build AssetBundle From Selection - No dependency tracking")]
-    static void ExpprotResourceNoTrack()
-    {
-        string path = EditorUtility.SaveFilePanel("Save Resource", "", "New Resource", "unity3d");
-        Debug.Log("path: " + path);
-
-        if (path.Length != 0)
-        {
-            BuildPipeline.BuildAssetBundle(Selection.activeObject, Selection.objects, path);
-        }
-    }
-
-    [MenuItem("GameObject/Build AssetBundles From Directory of Files" )]
+    [MenuItem("Custom Editor/Build AssetBundles From Directory of Files" )]
     static void ExportAssetBundles()
     {
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
@@ -72,7 +85,7 @@ public class MyEditor : Editor
 
     }
 
-    [MenuItem("GameObject/Export Scenes To XML")]
+    [MenuItem("Custom Editor/Export Scenes To XML")]
     static void ExportXML()
     {
         string filepath = Application.dataPath + "/my.xml";
@@ -172,7 +185,7 @@ public class MyEditor : Editor
         Debug.Log("export success");
     }
 	
-	[MenuItem( "Assets/Export Scene")]
+	[MenuItem( "Custom Editor/Export Scene")]
 	static void ExportScene()
 	{
 		string path = EditorUtility.SaveFilePanel("Save Resource", "/Res/Prefab", "New Resource", "unity3d");

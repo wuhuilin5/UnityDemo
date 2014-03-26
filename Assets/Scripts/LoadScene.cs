@@ -2,29 +2,74 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 public class LoadScene : MonoBehaviour {
-
-	//private string SceneUrl = Application.dataPath + "/Res/UnityDemo.unity3d";
-	public static readonly string cubeUrl = "File:///" + Application.dataPath + "/Res/cube.unity3d";
-	public static readonly string sceneUrl = "File:///" + Application.dataPath + "/Res/UnityDemo.unity3d";
+	
+	public static readonly string rootPath = 
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+	"File://" + Application.dataPath + "/StreamingAssets/";
+#elif UNITY_IPHONE
+	Application.dataPath + "/Raw/";
+#elif UNITY_ANDROID
+	"jar:file://" + Application.dataPath + "!/Assets/";
+#else
+	string.Empty;
+#endif
+	
+	public static readonly string AssetSuffix = ".assetbundle";
+	//public static readonly string SceneSuffix = ".unity3d";
+	
+	public static Dictionary<string, string[]> AssetMap;
 	
 	void Start () {
-		Debug.Log( "..Start.." + cubeUrl );
-		StartCoroutine( DownloadAssetAndScene() );
+		initAssetMap();
+		
+		foreach( var item in AssetMap ){
+			string filename = item.Key + AssetSuffix;
+			StartCoroutine(DownloadAssetAndScene( filename ));
+		}
 	}
 	
-	IEnumerator DownloadAssetAndScene()
+	private void initAssetMap()
 	{
-		WWW asset = new WWW( cubeUrl );  //WWW.LoadFromCacheOrDownload( cubeUrl, 1 );
+		AssetMap = new Dictionary<string, string[]>();
+	
+		AssetMap.Add( "cube_1", null);
+		AssetMap.Add( "cube_2", null);
+		//AssetMap.Add( "all", new string[]{"cube_1", "cube_2"});
+	}
+	
+	IEnumerator DownloadAssetAndScene( string filename )
+	{
+		string url = rootPath + filename;
+		WWW asset = WWW.LoadFromCacheOrDownload( url, 2 ); 
 		yield return asset;
-				
+	
 		AssetBundle bundle = asset.assetBundle;
-		GameObject obj = (GameObject)Instantiate( asset.assetBundle.mainAsset );
-		obj.SetActive( true );
+		if( asset.error != null ){
+			Debug.Log( "Error: " + asset.error );
+		}else{
+			Debug.Log( "dowload Asset" + filename + " successed. " + url );
+			
+			int index = filename.LastIndexOf( "." );
+			string assetName = filename.Substring( 0, index );
+			
+			GameObject obj;
+			string[] list = AssetMap[assetName];
+			if( list == null || list.Length == 0 ){
+				obj = (GameObject)Instantiate( bundle.mainAsset );
+				obj.SetActive( true );
+			}else{
+				foreach( string name in list )
+				{
+					obj = (GameObject)Instantiate( bundle.Load( name ));
+					obj.SetActive( true );
+				}
+			}
+		}
 		
-		Debug.Log( "dowload Asset..." + obj.name );
 		bundle.Unload(false);
 	}
 }
