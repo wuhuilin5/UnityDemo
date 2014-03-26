@@ -1,9 +1,5 @@
 ﻿using UnityEngine;
-
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 
 public class LoadScene : MonoBehaviour {
 	
@@ -18,58 +14,56 @@ public class LoadScene : MonoBehaviour {
 	string.Empty;
 #endif
 	
-	public static readonly string AssetSuffix = ".assetbundle";
-	//public static readonly string SceneSuffix = ".unity3d";
+	public static readonly string SceneSuffix = ".unity3d";
+	private bool isLoadScene = false;
 	
-	public static Dictionary<string, string[]> AssetMap;
+	private AsyncOperation Sync;
+	private string sceneName = "UnityDemo";
 	
-	void Start () {
-		initAssetMap();
-		
-		foreach( var item in AssetMap ){
-			string filename = item.Key + AssetSuffix;
-			StartCoroutine(DownloadAssetAndScene( filename ));
+	void Start () {;
+		//Application.LoadLevel( "UnityDemo" );
+		Debug.Log( "Start" );
+	}
+	
+	void Awake()
+	{
+		Debug.Log( "Awake" );
+	}
+	
+	void Update()
+	{
+		//yield return new WaitForSeconds(2);
+	}
+	
+	void OnGUI()
+	{
+		if(GUI.Button( new Rect( 0, 0, 80, 26), "loadScene" )){
+			if(!isLoadScene)
+				loadScene();
 		}
 	}
 	
-	private void initAssetMap()
+	private void loadScene()
 	{
-		AssetMap = new Dictionary<string, string[]>();
-	
-		AssetMap.Add( "cube_1", null);
-		AssetMap.Add( "cube_2", null);
-		//AssetMap.Add( "all", new string[]{"cube_1", "cube_2"});
-	}
-	
-	IEnumerator DownloadAssetAndScene( string filename )
-	{
-		string url = rootPath + filename;
-		WWW asset = WWW.LoadFromCacheOrDownload( url, 2 ); 
-		yield return asset;
-	
-		AssetBundle bundle = asset.assetBundle;
-		if( asset.error != null ){
-			Debug.Log( "Error: " + asset.error );
-		}else{
-			Debug.Log( "dowload Asset" + filename + " successed. " + url );
-			
-			int index = filename.LastIndexOf( "." );
-			string assetName = filename.Substring( 0, index );
-			
-			GameObject obj;
-			string[] list = AssetMap[assetName];
-			if( list == null || list.Length == 0 ){
-				obj = (GameObject)Instantiate( bundle.mainAsset );
-				obj.SetActive( true );
-			}else{
-				foreach( string name in list )
-				{
-					obj = (GameObject)Instantiate( bundle.Load( name ));
-					obj.SetActive( true );
-				}
-			}
-		}
+		isLoadScene = true;
 		
-		bundle.Unload(false);
+		string name = sceneName + SceneSuffix;
+		StartCoroutine( DownloadScene( name ));
+	}
+
+	IEnumerator DownloadScene( string name )
+	{
+		Debug.Log( "download scene " + name );
+		
+		string url = rootPath + name;
+		WWW scene = WWW.LoadFromCacheOrDownload( url,1 );
+		yield return scene;
+		Debug.Log( "download completet" );
+		
+		//var bundle = scene.assetBundle
+		//Application.LoadLevel( "UnityDemo" );
+		Sync = Application.LoadLevelAsync( sceneName );
+		yield return Sync;
+		//bundle = null;
 	}
 }

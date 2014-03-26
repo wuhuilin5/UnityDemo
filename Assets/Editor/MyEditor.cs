@@ -188,14 +188,14 @@ public class MyEditor : Editor
 	[MenuItem( "Custom Editor/Export Scene")]
 	static void ExportScene()
 	{
-		string path = EditorUtility.SaveFilePanel("Save Resource", "/Res/Prefab", "New Resource", "unity3d");
-		if( path.Length != 0 )
+		Caching.CleanCache();
+		
+		string targetPath = EditorUtility.SaveFilePanel("Save Resource", "/StreamingAssets/", "New Resource", "unity3d");
+		if( targetPath.Length != 0 )
 		{
-			//Object[] seletion = Selection.GetFiltered(typeof(object), SelectionMode.DeepAssets );
-			
 			string[] scenes = {"Assets/UnityDemo.unity"};
 			
-			BuildPipeline.BuildPlayer( scenes, path, BuildTarget.StandaloneWindows, BuildOptions.BuildAdditionalStreamedScenes );
+			BuildPipeline.BuildPlayer( scenes, targetPath, BuildTarget.StandaloneWindows, BuildOptions.BuildAdditionalStreamedScenes );
 		}
 	}
 }
