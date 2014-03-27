@@ -44,13 +44,18 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\ILoadFile.cs" />
+     <Compile Include="Assets\Scripts\ILoadFileManager.cs" />
      <Compile Include="Assets\Scripts\LoadAssets.cs" />
+     <Compile Include="Assets\Scripts\LoadFile.cs" />
+     <Compile Include="Assets\Scripts\LoadFileManager.cs" />
      <Compile Include="Assets\Scripts\LoadScene.cs" />
      <Compile Include="Assets\Scripts\LoadXmlScene.cs" />
      <Compile Include="Assets\Scripts\ResUpdate.cs" />
      <Compile Include="Assets\Scripts\SmartUpdate.cs" />
      <Compile Include="Assets\Scripts\TestBinding.cs" />
      <None Include="Assets\Res\version.txt" />
+     <None Include="Assets\StreamingAssets\files.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
