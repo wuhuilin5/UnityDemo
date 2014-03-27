@@ -1,19 +1,19 @@
-﻿using UnityEngine;
-
-using System.Collections;
+﻿
 using System.Xml;
 using System.Collections.Generic;
 
 using UnityDemo.interfaces;
 using UnityDemo.loadfile;
+using UnityDemo.interfaces.manager;
 
-namespace UnityDemo.mangers
+namespace UnityDemo.manager
 {
-	public class LoadFileManager: ILoadFileManager
+    public class LoadFileManager: ILoadFileManager
 	{
 		private Dictionary<string, ILoadFile> fileMap = new Dictionary<string, ILoadFile>();
 		private string dir = "";
 		
+
 		//XmlDocument xmldoc = new XmlDocument();
         //xmldoc.Load(filepath);   使用时需要把 xml load好
 		
@@ -31,7 +31,7 @@ namespace UnityDemo.mangers
 				}
 				else
 				{
-					dir = "/" + node.GetAttribute("n");
+					dir =  node.GetAttribute("n");
 					handleDir( node.ChildNodes );	
 				}
 			}

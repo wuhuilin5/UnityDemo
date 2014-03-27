@@ -7,53 +7,59 @@ using System.Xml;
 
 public class MyEditor : Editor
 {
-    [MenuItem("Custom Editor/Create AssetBundle Main" )]
-	static void CreateAssetBundlesMain()
+    [MenuItem("Custom Editor/Create AssetBundle Main")]
+    static void CreateAssetBundlesMain()
     {
-       	Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);		
-		foreach( Object obj in SelectedAsset )
-		{
-			string sourcePath = AssetDatabase.GetAssetPath( obj );
-			string targetPath = Application.dataPath + "/StreamingAssets/" + obj.name + ".assetbundle";
-			
-			Debug.Log( "sourcePath: " + sourcePath );
-			
-			//移动平台需要在最后添加一个参数：android: BuildTarget.Android, ios: BuildTarget.iPhone
-        	bool ret = BuildPipeline.BuildAssetBundle( obj, null, targetPath, BuildAssetBundleOptions.CollectDependencies );
-			
-			if( ret ){
-				Debug.Log( obj.name + " export successed! " + targetPath );
-			}else{
-				Debug.Log( obj.name + " export failed");
-			}
-		}   
-		
-		AssetDatabase.Refresh();
-	}
+        Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+        foreach (Object obj in SelectedAsset)
+        {
+            string sourcePath = AssetDatabase.GetAssetPath(obj);
+            string targetPath = Application.dataPath + "/StreamingAssets/" + obj.name + ".assetbundle";
+
+            Debug.Log("sourcePath: " + sourcePath);
+
+            //移动平台需要在最后添加一个参数：android: BuildTarget.Android, ios: BuildTarget.iPhone
+            bool ret = BuildPipeline.BuildAssetBundle(obj, null, targetPath, BuildAssetBundleOptions.CollectDependencies);
+
+            if (ret)
+            {
+                Debug.Log(obj.name + " export successed! " + targetPath);
+            }
+            else
+            {
+                Debug.Log(obj.name + " export failed");
+            }
+        }
+
+        AssetDatabase.Refresh();
+    }
 
     [MenuItem("Custom Editor/Create AssetBundle All")]
     static void CreateAssetBundleAll()
     {
-		Caching.CleanCache();
-		
-		string targetPath = Application.dataPath + "/StreamingAssets/all.assetbundle";
-		Object[] SelectedAssets = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets );
-	    
-		bool ret = BuildPipeline.BuildAssetBundle( null, SelectedAssets, targetPath, BuildAssetBundleOptions.CollectDependencies );
-		if( ret ){
-			AssetDatabase.Refresh();		
-			Debug.Log( "Create AssetBundle All Successed." );
-		}else{
-			Debug.Log( "Create AssetBundle All failed." );
-		}
+        Caching.CleanCache();
+
+        string targetPath = Application.dataPath + "/StreamingAssets/all.assetbundle";
+        Object[] SelectedAssets = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+
+        bool ret = BuildPipeline.BuildAssetBundle(null, SelectedAssets, targetPath, BuildAssetBundleOptions.CollectDependencies);
+        if (ret)
+        {
+            AssetDatabase.Refresh();
+            Debug.Log("Create AssetBundle All Successed.");
+        }
+        else
+        {
+            Debug.Log("Create AssetBundle All failed.");
+        }
     }
 
-    [MenuItem("Custom Editor/Build AssetBundles From Directory of Files" )]
+    [MenuItem("Custom Editor/Build AssetBundles From Directory of Files")]
     static void ExportAssetBundles()
     {
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
         Debug.Log("Selected Folder: " + path);
-		
+
         if (path.Length != 0)
         {
             path = path.Replace("Assets/", "");
@@ -110,7 +116,7 @@ public class MyEditor : Editor
                 XmlElement scenes = xmlDoc.CreateElement("scenes");
                 scenes.SetAttribute("name", name);
 
-                foreach( GameObject obj in Object.FindObjectsOfType( typeof(GameObject)))
+                foreach (GameObject obj in Object.FindObjectsOfType(typeof(GameObject)))
                 {
                     if (obj.transform.parent == null)
                     {
@@ -184,18 +190,34 @@ public class MyEditor : Editor
         AssetDatabase.Refresh();
         Debug.Log("export success");
     }
-	
-	[MenuItem( "Custom Editor/Export Scene")]
-	static void ExportScene()
-	{
-		Caching.CleanCache();
-		
-		string targetPath = EditorUtility.SaveFilePanel("Save Resource", "/StreamingAssets/", "New Resource", "unity3d");
-		if( targetPath.Length != 0 )
-		{
-			string[] scenes = {"Assets/UnityDemo.unity"};
-			
-			BuildPipeline.BuildPlayer( scenes, targetPath, BuildTarget.StandaloneWindows, BuildOptions.BuildAdditionalStreamedScenes );
-		}
-	}
+
+    [MenuItem("Custom Editor/Export Scene")]
+    static void ExportScene()
+    {
+        Caching.CleanCache();
+
+        string targetPath = EditorUtility.SaveFilePanel("Save Resource", "/StreamingAssets/", "New Resource", "unity3d");
+        if (targetPath.Length != 0)
+        {
+            string[] scenes = { "Assets/UnityDemo.unity" };
+
+            BuildPipeline.BuildPlayer(scenes, targetPath, BuildTarget.StandaloneWindows, BuildOptions.BuildAdditionalStreamedScenes);
+        }
+    }
+
+    [MenuItem("Custom Editor/Export Dictionary to xml")]
+    static void ExportDirToXml()
+    {
+        string filepath = Application.streamingAssetsPath + "/files.xml";
+        if (File.Exists(filepath))
+        {
+            File.Delete(filepath);
+        }
+
+        XmlDocument xmlDoc = new XmlDocument();
+        XmlElement root = xmlDoc.CreateElement("fs");
+
+        xmlDoc.AppendChild(root);
+        xmlDoc.Save(filepath);
+    }
 }

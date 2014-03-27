@@ -44,11 +44,15 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\FileUtils.cs" />
+     <Compile Include="Assets\Scripts\IFileUtils.cs" />
      <Compile Include="Assets\Scripts\ILoadFile.cs" />
      <Compile Include="Assets\Scripts\ILoadFileManager.cs" />
+     <Compile Include="Assets\Scripts\ILoadManger.cs" />
      <Compile Include="Assets\Scripts\LoadAssets.cs" />
      <Compile Include="Assets\Scripts\LoadFile.cs" />
      <Compile Include="Assets\Scripts\LoadFileManager.cs" />
+     <Compile Include="Assets\Scripts\LoadManager.cs" />
      <Compile Include="Assets\Scripts\LoadScene.cs" />
      <Compile Include="Assets\Scripts\LoadXmlScene.cs" />
      <Compile Include="Assets\Scripts\ResUpdate.cs" />
