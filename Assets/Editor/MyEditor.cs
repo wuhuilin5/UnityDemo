@@ -217,7 +217,52 @@ public class MyEditor : Editor
         XmlDocument xmlDoc = new XmlDocument();
         XmlElement root = xmlDoc.CreateElement("fs");
 
+        try{
+            string fileFolder = Application.streamingAssetsPath;
+            DirectoryInfo folder = new DirectoryInfo(fileFolder);
+            FileSystemInfo[] files = folder.GetFileSystemInfos();
+
+            Debug.Log("file count:" + files.Length);
+
+            foreach (FileSystemInfo file in files)
+            {
+                Debug.Log(string.Format("file name: {0}", file.Name));
+                appendFileToXml( xmlDoc, root, file);
+            }
+        }finally{
+        }
+      
         xmlDoc.AppendChild(root);
         xmlDoc.Save(filepath);
+
+        Debug.Log("Export Successed! " + filepath);
+    }
+
+    private static void appendFileToXml(XmlDocument xmlDoc, XmlElement root, FileSystemInfo fileInfo)
+    {
+        string path = fileInfo.FullName;
+
+        if ( Directory.Exists( path ) ){  //如果是目录
+           
+            XmlElement dir = xmlDoc.CreateElement("d");
+            dir.SetAttribute("n", fileInfo.Name);
+            root.AppendChild(dir);
+
+            DirectoryInfo folder = new DirectoryInfo( path);
+            FileSystemInfo[] files = folder.GetFileSystemInfos();
+
+            foreach (FileSystemInfo file in files)
+            {
+                appendFileToXml(xmlDoc, dir, file);
+            }
+        }
+        else
+        {
+            XmlElement node = xmlDoc.CreateElement("d");
+            node.SetAttribute("u", fileInfo.Name);
+            node.SetAttribute("v", "11" );
+
+            root.AppendChild(node);
+        }
     }
 }

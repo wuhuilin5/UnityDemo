@@ -26,7 +26,7 @@ namespace UnityEditor.Utils
 
         public static string getAssetBundlePath(string name)
         {
-            string tempPath = "assetbundle/" + name;
+            string tempPath = "assetbundle/" + name + ".assetbundle";
             return StreamingAssetRootPath + tempPath;
         }
 	}

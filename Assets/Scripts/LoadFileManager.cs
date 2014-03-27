@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityDemo.interfaces;
 using UnityDemo.loadfile;
 using UnityDemo.interfaces.manager;
+using UnityEngine;
 
 namespace UnityDemo.manager
 {
@@ -35,13 +36,12 @@ namespace UnityDemo.manager
 					handleDir( node.ChildNodes );	
 				}
 			}
-			
-//			foreach( KeyValuePair<string, ILoadFile> keyValue in fileMap )
-//			{
-//				string msg = string.Format( "n:{0},v:{1}\n", keyValue.Value.Path, keyValue.Value.Version );
-//				Debug.Log( msg );
-//				break;
-//			}
+
+            //foreach (KeyValuePair<string, ILoadFile> keyValue in fileMap)
+            //{
+            //    string msg = string.Format("n:{0},v:{1}\n", keyValue.Value.Path, keyValue.Value.Version);
+            //    Debug.Log(msg);
+            //}
 		}
 		
 		private void handleDir( XmlNodeList nodelist )
@@ -59,8 +59,9 @@ namespace UnityDemo.manager
 					handleDir( node.ChildNodes );	
 				}
 			}
-			
-			dir = dir.Substring( 0, dir.LastIndexOf( "/" ));
+
+            int index = dir.LastIndexOf("/");   //返回上一个目录
+            dir = index >= 0 ? dir.Substring(0, index) : "";
 		}
 		
 		public ILoadFile getFile( string path )

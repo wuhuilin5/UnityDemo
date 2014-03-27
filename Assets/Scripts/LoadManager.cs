@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace UnityDemo.manager
 {
-    public delegate void LoadFunishHandler(WWW www, string filename);
+    public delegate void LoadFunishHandler( AssetBundle asset, string filename);
 
     public class LoadManager : ILoadManger
     {
         private static ILoadManger instance;
+        private ILoadFileManager loadFileManager;
 
         private LoadManager() { }
 
@@ -24,7 +25,7 @@ namespace UnityDemo.manager
         public IEnumerator loadUrl(string url, int version, LoadFunishHandler callback = null, string filename = "")
         {
             WWW loader = WWW.LoadFromCacheOrDownload(url, version);
-
+           
             yield return loader;
 
             if (loader.error != null){
@@ -32,8 +33,10 @@ namespace UnityDemo.manager
             }
             else {
                 if (callback != null)
-                    callback( loader, filename );
+                    callback( loader.assetBundle, filename );
             }
+
+            loader.assetBundle.Unload(false);
         }
     }
 }
