@@ -218,17 +218,9 @@ public class MyEditor : Editor
         XmlElement root = xmlDoc.CreateElement("fs");
 
         try{
-            string fileFolder = Application.streamingAssetsPath;
-            DirectoryInfo folder = new DirectoryInfo(fileFolder);
-            FileSystemInfo[] files = folder.GetFileSystemInfos();
+            string filePath = Application.streamingAssetsPath;
+            appendDirectory(filePath, xmlDoc, root);
 
-            Debug.Log("file count:" + files.Length);
-
-            foreach (FileSystemInfo file in files)
-            {
-                Debug.Log(string.Format("file name: {0}", file.Name));
-                appendFileToXml( xmlDoc, root, file);
-            }
         }finally{
         }
       
@@ -238,23 +230,28 @@ public class MyEditor : Editor
         Debug.Log("Export Successed! " + filepath);
     }
 
-    private static void appendFileToXml(XmlDocument xmlDoc, XmlElement root, FileSystemInfo fileInfo)
+    private static void appendDirectory( string filePath, XmlDocument xmlDoc, XmlElement root )
     {
-        string path = fileInfo.FullName;
+        DirectoryInfo folderInfo = new DirectoryInfo(filePath);
+        FileSystemInfo[] fileInfos = folderInfo.GetFileSystemInfos();
 
-        if ( Directory.Exists( path ) ){  //如果是目录
-           
+        foreach (FileSystemInfo fileInfo in fileInfos)
+        {
+            appendFile(xmlDoc, root, fileInfo);
+        }
+    }
+
+    private static void appendFile(XmlDocument xmlDoc, XmlElement root, FileSystemInfo fileInfo)
+    {
+        string filePath = fileInfo.FullName;
+
+        if (Directory.Exists(filePath))    //如果是目录
+        {
             XmlElement dir = xmlDoc.CreateElement("d");
             dir.SetAttribute("n", fileInfo.Name);
             root.AppendChild(dir);
 
-            DirectoryInfo folder = new DirectoryInfo( path);
-            FileSystemInfo[] files = folder.GetFileSystemInfos();
-
-            foreach (FileSystemInfo file in files)
-            {
-                appendFileToXml(xmlDoc, dir, file);
-            }
+            appendDirectory( filePath, xmlDoc, dir);
         }
         else
         {
