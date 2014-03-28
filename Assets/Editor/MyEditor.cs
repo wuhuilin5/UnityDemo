@@ -135,49 +135,21 @@ public class MyEditor : Editor
 
                         //position
                         XmlElement position = xmlDoc.CreateElement("position");
-
-                        XmlElement pos_x = xmlDoc.CreateElement("x");
-                        pos_x.InnerText = obj.transform.position.x + "";
-
-                        XmlElement pos_y = xmlDoc.CreateElement("y");
-                        pos_y.InnerText = obj.transform.position.y + "";
-
-                        XmlElement pos_z = xmlDoc.CreateElement("z");
-                        pos_z.InnerText = obj.transform.position.z + "";
-
-                        position.AppendChild(pos_x);
-                        position.AppendChild(pos_y);
-                        position.AppendChild(pos_z);
+                        position.SetAttribute("x", obj.transform.position.x + "");
+                        position.SetAttribute("y", obj.transform.position.y + "");
+                        position.SetAttribute("z", obj.transform.position.z + "");
 
                         //rotation
                         XmlElement rotation = xmlDoc.CreateElement("rotation");
-                        XmlElement rot_x = xmlDoc.CreateElement("x");
-                        rot_x.InnerText = obj.transform.rotation.eulerAngles.x + "";
-
-                        XmlElement rot_y = xmlDoc.CreateElement("y");
-                        rot_y.InnerText = obj.transform.rotation.eulerAngles.y + "";
-
-                        XmlElement rot_z = xmlDoc.CreateElement("z");
-                        rot_z.InnerText = obj.transform.rotation.eulerAngles.z + "";
-
-                        rotation.AppendChild(rot_x);
-                        rotation.AppendChild(rot_y);
-                        rotation.AppendChild(rot_z);
+                        rotation.SetAttribute( "x",  obj.transform.rotation.eulerAngles.x + "");
+                        rotation.SetAttribute( "y",  obj.transform.rotation.eulerAngles.y + "");
+                        rotation.SetAttribute( "z",  obj.transform.rotation.eulerAngles.z + "");
 
                         //scale;
                         XmlElement scale = xmlDoc.CreateElement("scale");
-                        XmlElement scale_x = xmlDoc.CreateElement("x");
-                        scale_x.InnerText = obj.transform.localScale.x + "";
-
-                        XmlElement scale_y = xmlDoc.CreateElement("y");
-                        scale_y.InnerText = obj.transform.localScale.y + "";
-
-                        XmlElement scale_z = xmlDoc.CreateElement("z");
-                        scale_z.InnerText = obj.transform.localScale.z + "";
-
-                        scale.AppendChild(scale_x);
-                        scale.AppendChild(scale_y);
-                        scale.AppendChild(scale_z);
+                        scale.SetAttribute( "x", obj.transform.localScale.x + "");
+                        scale.SetAttribute( "y", obj.transform.localScale.y + "");
+                        scale.SetAttribute( "z", obj.transform.localScale.z + "");
 
                         transform.AppendChild(position);
                         transform.AppendChild(rotation);

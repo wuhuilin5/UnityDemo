@@ -52,14 +52,13 @@ public class LoadXmlScene : MonoBehaviour {
                             {
                                 rot = GetVector3FromXmlElement(node);
                             }
-                            else if( node.Name == "scale")
+                            else if (node.Name == "scale")
                             {
                                 scale = GetVector3FromXmlElement(node);
                             }
                         }
                     }
                 
-                   // GameObject obj = (GameObject)Instantiate(Resources.Load(asset), pos, Quaternion.Euler(rot));
                     ArrayList param = new ArrayList();
                     param.Add(name);
                     param.Add(pos);
@@ -77,24 +76,9 @@ public class LoadXmlScene : MonoBehaviour {
     private Vector3 GetVector3FromXmlElement(XmlElement transform)
     {
         Vector3 vec = Vector3.zero;
-
-        foreach (XmlElement node in transform.ChildNodes)
-        {
-            switch (node.Name)
-            {
-                case "x":
-                    vec.x = float.Parse(node.InnerText);
-                    break;
-
-                case "y":
-                    vec.y = float.Parse(node.InnerText);
-                    break;
-
-                case "z":
-                    vec.z = float.Parse(node.InnerText);
-                    break;
-            }
-        }
+        vec.x = float.Parse(transform.GetAttribute("x"));
+        vec.y = float.Parse(transform.GetAttribute("y"));
+        vec.z = float.Parse(transform.GetAttribute("z"));
 
         return vec;
     }

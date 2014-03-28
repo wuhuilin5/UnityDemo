@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityDemo.manager
 {
-    public delegate void LoadFunishHandler( AssetBundle asset, string filename);
+    public delegate void LoadFunishHandler( AssetBundle asset, string filename = null);
 
     public class LoadManager : ILoadManger
     {
@@ -21,7 +21,7 @@ namespace UnityDemo.manager
             return instance;
         }
 
-        public IEnumerator loadUrl(string url, LoadFunishHandler callback = null, string filename = "")
+        public IEnumerator loadUrl(string url, LoadFunishHandler callback = null, string filename = null )
         {
             int version = getVersion(url);
             WWW loader = WWW.LoadFromCacheOrDownload( url,version);
@@ -34,7 +34,14 @@ namespace UnityDemo.manager
             }
             else {
                 if (callback != null)
-                    callback( loader.assetBundle, filename );
+                {
+                    if (filename != null){
+                        callback(loader.assetBundle, filename);
+                    }
+                    else {
+                        callback(loader.assetBundle);
+                    }
+                }
             }
 
             loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,

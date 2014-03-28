@@ -8,6 +8,7 @@
     <d u="cube_1.assetbundle" v="4" md5="8D5CA0C93D9CA438765563091AEF2BD8" />
     <d u="cube_2.assetbundle" v="2" md5="2E054633C7D0911076360F0523C0F517" />
     <d u="Main Camera.assetbundle" v="1" md5="389C978903D20B38FF321D3A4D5624A6" />
+    <d u="Terrain.assetbundle" v="1" md5="D237B1B32BE5F502B4E1C787F19D5E67" />
   </d>
   <d n="image" />
   <d n="luaroot" />
@@ -15,5 +16,5 @@
   <d n="ui" />
   <d u="Main Camera.assetbundle" v="1" md5="3FBFDC956A3B5846553E295875612E2B" />
   <d u="UnityDemo.unity3d" v="1" md5="28E9A4594C0B47BC7EA38DEE4376B2B1" />
-  <d u="UnityDemo.xml" v="1" md5="CAFFBF0127956A2CD7BB3F94CDEBC50D" />
+  <d u="UnityDemo.xml" v="2" md5="A5AE84D63ECF2A3FDB616058E12A61B7" />
 </fs>
