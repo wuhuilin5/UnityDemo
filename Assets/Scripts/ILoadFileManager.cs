@@ -6,6 +6,7 @@ namespace UnityDemo.interfaces.manager
     {
         void setData(XmlDocument xmlDoc);
         ILoadFile getFile(string path);
-        string getVersion(string path);
+        int getVersion(string path);
+        string getMd5(string path);
     }
 }

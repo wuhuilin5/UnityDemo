@@ -3,34 +3,30 @@ using System.Collections;
 using System.IO;
 using System.Xml;
 
+using UnityDemo.Utils;
+using UnityDemo.manager;
+using UnityDemo.interfaces.manager;
 
 public class LoadXmlScene : MonoBehaviour {
 
-	// Use this for initialization
-	private static readonly string RES_URL = "file:///E:/wuhuilin/Unity/Resources/Prefab/";
-	
+    private ILoadManger loadMgr;
+
 	void Start () {
+        loadMgr = LoadManager.getIntance();
         LoadScene();
 	}
 	
     private void LoadScene()
     {
-#if UNITY_EDITOR
-        string filepath = Application.dataPath + "/StreamingAssets/UnityDemo.xml";
-#elif UNITY_IPHONE
-        string filepath = Application.dataPath + "/Raw" + "UnityDemo.xml";
-#else
-		string filepath = Application.dataPath + "/StreamingAssets/UnityDemo.xml";
-#endif
+        string filepath = Application.streamingAssetsPath + "/UnityDemo.xml";
+        Debug.Log("filepath " + filepath);
+       
         if (File.Exists(filepath)) 
         {
-            Debug.Log("filepath " + filepath);
-
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.Load(filepath);
 
             XmlNodeList nodelist = xmldoc.SelectSingleNode("gameObjects").ChildNodes;
-
             foreach (XmlElement scene in nodelist)
             {
                 Debug.Log("scene  " + scene.Name );
@@ -70,7 +66,7 @@ public class LoadXmlScene : MonoBehaviour {
                     param.Add(rot);
                     param.Add(scale);
 
-                    StartCoroutine( "LoadGameObject", param );
+                    LoadGameObject(param);
                 }
             }
 
@@ -78,7 +74,7 @@ public class LoadXmlScene : MonoBehaviour {
         }
     }
 
-    private Vector3 GetVector3FromXmlElement(XmlElement transform )
+    private Vector3 GetVector3FromXmlElement(XmlElement transform)
     {
         Vector3 vec = Vector3.zero;
 
@@ -97,29 +93,25 @@ public class LoadXmlScene : MonoBehaviour {
                 case "z":
                     vec.z = float.Parse(node.InnerText);
                     break;
-              
             }
         }
 
         return vec;
     }
 
-    IEnumerator LoadGameObject( ArrayList param )
+    private void LoadGameObject( ArrayList param )
     {
-		string filename = param[0].ToString() + ".unity3d";
-        Debug.Log("start load GameObject " + filename);
-		string url = RES_URL + filename;
-		
-        WWW www = WWW.LoadFromCacheOrDownload( url, 1);
-        yield return www;
+        string name = param[0].ToString();
+        string url = FileUtils.getAssetBundlePath(name);
 
-        Vector3 pos = (Vector3)param[1];
-        Vector3 rot = (Vector3)param[2];
-        Vector3 scale = (Vector3)param[3];
+        StartCoroutine(loadMgr.loadUrl(url, delegate(AssetBundle asset, string filename)
+        {
+            Vector3 pos = (Vector3)param[1];
+            Vector3 rot = (Vector3)param[2];
+            Vector3 scale = (Vector3)param[3];
 
-        GameObject gameobject = (GameObject)Instantiate( www.assetBundle.mainAsset, pos, Quaternion.Euler(rot));
-        gameobject.transform.localScale = scale;
-        www.assetBundle.Unload(false);
-        Debug.Log("load " + name + " over!" );
+            GameObject obj = (GameObject)Instantiate(asset.mainAsset, pos, Quaternion.Euler(rot));
+            obj.transform.localScale = scale;
+        }));
     }
 }

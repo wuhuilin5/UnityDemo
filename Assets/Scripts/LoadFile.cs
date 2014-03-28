@@ -6,12 +6,14 @@ namespace UnityDemo.loadfile
 	public class LoadFile: ILoadFile
 	{
 		private string path;
-		private string version;
-		
-		public LoadFile ( string path, string version )
+		private int version;
+        private string md5;
+
+		public LoadFile ( string path, int version, string md5 )
 		{
 			this.Path = path;
 			this.Version = version;
+            this.Md5 = md5;
 		}
 		
 		public string Path {
@@ -23,7 +25,7 @@ namespace UnityDemo.loadfile
 			}
 		}
 
-		public string Version {
+		public int Version {
 			get {
 				return this.version;
 			}
@@ -31,6 +33,18 @@ namespace UnityDemo.loadfile
 				version = value;
 			}
 		}
+
+        public string Md5
+        {
+            get
+            {
+                return this.md5;
+            }
+            set
+            {
+                md5 = value;
+            }
+        }
 	}
 }
 

@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using UnityDemo.interfaces.manager;
 using UnityDemo.manager;
-using UnityEditor.Utils;
+using UnityDemo.Utils;
 using UnityEngine;
 
 public class LoadAssets : MonoBehaviour
@@ -12,28 +11,13 @@ public class LoadAssets : MonoBehaviour
     public static Dictionary<string, string[]> AssetMap;
 
     private ILoadManger loadMgr;
-    private ILoadFileManager loadFileMgr;
 
     void Start()
     {
         loadMgr = LoadManager.getIntance();
-        loadFileMgr = LoadFileManager.getIntance();
-
+ 
         initAssetMap();
         loadAssets();
-
-        testLoadFileManager();
-    }
-
-    private void testLoadFileManager()
-    {
-        string filePath = Application.streamingAssetsPath + "/files.xml";
-        if (File.Exists(filePath))
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(filePath);
-            loadFileMgr.setData(xmlDoc);
-        }
     }
 
     private void initAssetMap()
@@ -52,7 +36,7 @@ public class LoadAssets : MonoBehaviour
             string filename = item.Key;
 
             string url = FileUtils.getAssetBundlePath(filename);
-            StartCoroutine( loadMgr.loadUrl(url, 1, onLoadComplete, filename));
+            StartCoroutine( loadMgr.loadUrl(url, onLoadComplete, filename));
         }
     }
 

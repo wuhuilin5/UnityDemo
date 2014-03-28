@@ -1,6 +1,7 @@
 ﻿
 using System.Xml;
 using System.Collections.Generic;
+using System.IO;
 
 using UnityDemo.interfaces;
 using UnityDemo.loadfile;
@@ -16,7 +17,10 @@ namespace UnityDemo.manager
 		private Dictionary<string, ILoadFile> fileMap = new Dictionary<string, ILoadFile>();
 		private string dir = "";
 
-        private LoadFileManager() { }
+        private LoadFileManager() 
+        {
+            init();
+        }
 
         public static ILoadFileManager getIntance()
         {
@@ -24,6 +28,17 @@ namespace UnityDemo.manager
                 instance = new LoadFileManager();
 
             return instance;
+        }
+
+        private void init()
+        {
+             string filePath = Application.streamingAssetsPath + "/files.xml";
+             if (File.Exists(filePath))
+             {
+                 XmlDocument xmlDoc = new XmlDocument();
+                 xmlDoc.Load( filePath );
+                 setData(xmlDoc);
+             }
         }
 
 		//XmlDocument xmldoc = new XmlDocument();
@@ -38,8 +53,7 @@ namespace UnityDemo.manager
 				dir = "";
 				if( node.HasAttribute("u"))
 				{
-					ILoadFile file = new LoadFile( node.GetAttribute("u"), node.GetAttribute("v"));
-					fileMap.Add( file.Path, file );
+                    addFile(node);
 				}
 				else
 				{
@@ -61,8 +75,7 @@ namespace UnityDemo.manager
 			{
 				if( node.HasAttribute("u"))
 				{
-					ILoadFile file = new LoadFile( dir+"/"+node.GetAttribute("u"), node.GetAttribute("v"));
-					fileMap.Add( file.Path, file );
+                    addFile(node);
 				}
 				else
 				{
@@ -74,7 +87,19 @@ namespace UnityDemo.manager
             int index = dir.LastIndexOf("/");   //返回上一个目录
             dir = index >= 0 ? dir.Substring(0, index) : "";
 		}
-		
+
+        private void addFile( XmlElement node )
+        {
+            string name = node.GetAttribute("u");
+            string path = dir.Length > 0 ? dir+"/"+name : name;
+         
+            int version = int.Parse(node.GetAttribute("v"));
+            string md5 = node.GetAttribute("md5");
+
+            ILoadFile file = new LoadFile(path, version, md5);
+            fileMap.Add(file.Path, file);
+        }
+
 		public ILoadFile getFile( string path )
 		{
 			if( fileMap.ContainsKey( path ))
@@ -82,13 +107,22 @@ namespace UnityDemo.manager
 			return null;
 		}
 		
-		public string getVersion( string path )
+		public int getVersion( string path )
 		{
 			ILoadFile file = getFile( path );
 			if( file != null )
 				return file.Version;
 			
-			return "0";
+			return 0;
 		}
+
+        public string getMd5(string path)
+        {
+            ILoadFile file = getFile(path);
+            if (file != null)
+                return file.Md5;
+
+            return "0";
+        }
 	}
 }

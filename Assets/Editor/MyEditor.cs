@@ -4,9 +4,16 @@ using System.Collections;
 using UnityEditor;
 using System.IO;
 using System.Xml;
+using UnityDemo.Utils;
+
+using UnityDemo.interfaces.manager;
+using UnityDemo.manager;
+using UnityDemo.interfaces;
 
 public class MyEditor : Editor
 {
+    private static ILoadFileManager loadFileMgr = LoadFileManager.getIntance();
+
     [MenuItem("Custom Editor/Create AssetBundle Main")]
     static void CreateAssetBundlesMain()
     {
@@ -14,7 +21,7 @@ public class MyEditor : Editor
         foreach (Object obj in SelectedAsset)
         {
             string sourcePath = AssetDatabase.GetAssetPath(obj);
-            string targetPath = Application.dataPath + "/StreamingAssets/" + obj.name + ".assetbundle";
+            string targetPath = Application.streamingAssetsPath + "/assetbundle/" + obj.name + ".assetbundle";
 
             Debug.Log("sourcePath: " + sourcePath);
 
@@ -32,14 +39,13 @@ public class MyEditor : Editor
         }
 
         AssetDatabase.Refresh();
+        ExportDirToXml();
     }
 
     [MenuItem("Custom Editor/Create AssetBundle All")]
     static void CreateAssetBundleAll()
     {
-        Caching.CleanCache();
-
-        string targetPath = Application.dataPath + "/StreamingAssets/all.assetbundle";
+        string targetPath = Application.streamingAssetsPath + "/assetbundle/all.assetbundle";
         Object[] SelectedAssets = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
 
         bool ret = BuildPipeline.BuildAssetBundle(null, SelectedAssets, targetPath, BuildAssetBundleOptions.CollectDependencies);
@@ -52,49 +58,50 @@ public class MyEditor : Editor
         {
             Debug.Log("Create AssetBundle All failed.");
         }
+
+        ExportDirToXml();
     }
 
-    [MenuItem("Custom Editor/Build AssetBundles From Directory of Files")]
-    static void ExportAssetBundles()
-    {
-        string path = AssetDatabase.GetAssetPath(Selection.activeObject);
-        Debug.Log("Selected Folder: " + path);
+    //[MenuItem("Custom Editor/Build AssetBundles From Directory of Files")]
+    //static void ExportAssetBundles()
+    //{
+    //    string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+    //    Debug.Log("Selected Folder: " + path);
 
-        if (path.Length != 0)
-        {
-            path = path.Replace("Assets/", "");
-            Debug.Log("data path: " + Application.dataPath);
+    //    if (path.Length != 0)
+    //    {
+    //        path = path.Replace("Assets/", "");
+    //        Debug.Log("data path: " + Application.dataPath);
 
-            string[] fileEntries = Directory.GetFiles(Application.dataPath + "/" + path);
+    //        string[] fileEntries = Directory.GetFiles(Application.dataPath + "/" + path);
 
-            foreach (string filename in fileEntries)
-            {
-                string filepath = filename.Replace("\\", "/");
-                int index = filepath.LastIndexOf("/");
-                Debug.Log(filepath);
+    //        foreach (string filename in fileEntries)
+    //        {
+    //            string filepath = filename.Replace("\\", "/");
+    //            int index = filepath.LastIndexOf("/");
+    //            Debug.Log(filepath);
 
-                string localPath = "Assets/" + path;
-                if (index > 0)
-                    localPath += filepath;
+    //            string localPath = "Assets/" + path;
+    //            if (index > 0)
+    //                localPath += filepath;
 
-                Object t = AssetDatabase.LoadMainAssetAtPath(localPath);
-                if (t != null)
-                {
-                    Debug.Log(t.name);
-                    string bundlePath = "Assets/" + path + "/" + t.name + ".unity3d";
+    //            Object t = AssetDatabase.LoadMainAssetAtPath(localPath);
+    //            if (t != null)
+    //            {
+    //                Debug.Log(t.name);
+    //                string bundlePath = "Assets/" + path + "/" + t.name + ".unity3d";
 
-                    BuildPipeline.BuildAssetBundle(t, null, bundlePath, BuildAssetBundleOptions.CompleteAssets);
-                }
-            }
+    //                BuildPipeline.BuildAssetBundle(t, null, bundlePath, BuildAssetBundleOptions.CompleteAssets);
+    //            }
+    //        }
 
-        }
-
-    }
+    //    }
+    //}
 
     [MenuItem("Custom Editor/Export Scene To XML")]
     static void ExportSceneToXML()
     {
-        string filepath = Application.dataPath + "/my.xml";
+        string filepath = Application.streamingAssetsPath + "/UnityDemo.xml";
         if (File.Exists(filepath))
         {
             File.Delete(filepath);
@@ -122,7 +129,7 @@ public class MyEditor : Editor
                     {
                         XmlElement gameObject = xmlDoc.CreateElement("gameObject");
                         gameObject.SetAttribute("name", obj.name);
-                        gameObject.SetAttribute("asset", obj.name + ".prefab");
+                        gameObject.SetAttribute("asset", obj.name + ".assetbundle");
 
                         XmlElement transform = xmlDoc.CreateElement("transform");
 
@@ -191,26 +198,31 @@ public class MyEditor : Editor
         Debug.Log("export success");
     }
 
-    [MenuItem("Custom Editor/Export Scene")]
-    static void ExportScene()
-    {
-        Caching.CleanCache();
+    //[MenuItem("Custom Editor/Export Scene")]
+    //static void ExportScene()
+    //{
+    //    Caching.CleanCache();
 
-        string targetPath = EditorUtility.SaveFilePanel("Save Resource", "/StreamingAssets/", "New Resource", "unity3d");
-        if (targetPath.Length != 0)
-        {
-            string[] scenes = { "Assets/UnityDemo.unity" };
+    //    string targetPath = EditorUtility.SaveFilePanel("Save Resource", "/StreamingAssets/", "New Resource", "unity3d");
+    //    if (targetPath.Length != 0)
+    //    {
+    //        string[] scenes = { "Assets/UnityDemo.unity" };
 
-            BuildPipeline.BuildPlayer(scenes, targetPath, BuildTarget.StandaloneWindows, BuildOptions.BuildAdditionalStreamedScenes);
-        }
-    }
+    //        BuildPipeline.BuildPlayer(scenes, targetPath, BuildTarget.StandaloneWindows, BuildOptions.BuildAdditionalStreamedScenes);
+    //    }
+    //}
 
     [MenuItem("Custom Editor/Export Dictionary to xml")]
     static void ExportDirToXml()
     {
         string filepath = Application.streamingAssetsPath + "/files.xml";
+       
         if (File.Exists(filepath))
         {
+            XmlDocument oldXml = new XmlDocument();
+            oldXml.Load(filepath);
+            loadFileMgr.setData(oldXml);
+
             File.Delete(filepath);
         }
 
@@ -230,6 +242,8 @@ public class MyEditor : Editor
         Debug.Log("Export Successed! " + filepath);
     }
 
+    private static string dir = "";
+
     private static void appendDirectory( string filePath, XmlDocument xmlDoc, XmlElement root )
     {
         DirectoryInfo folderInfo = new DirectoryInfo(filePath);
@@ -239,6 +253,9 @@ public class MyEditor : Editor
         {
             appendFile(xmlDoc, root, fileInfo);
         }
+
+        int index = dir.LastIndexOf("/");   //返回上一个目录
+        dir = index >= 0 ? dir.Substring(0, index) : "";
     }
 
     private static void appendFile(XmlDocument xmlDoc, XmlElement root, FileSystemInfo fileInfo)
@@ -247,19 +264,56 @@ public class MyEditor : Editor
 
         if (Directory.Exists(filePath))    //如果是目录
         {
-            XmlElement dir = xmlDoc.CreateElement("d");
-            dir.SetAttribute("n", fileInfo.Name);
-            root.AppendChild(dir);
+            XmlElement rootDir = xmlDoc.CreateElement("d");
+            rootDir.SetAttribute("n", fileInfo.Name);
+            root.AppendChild(rootDir);
 
-            appendDirectory( filePath, xmlDoc, dir);
+            dir += "/"+ fileInfo.Name;
+            appendDirectory(filePath, xmlDoc, rootDir);
         }
         else
         {
             XmlElement node = xmlDoc.CreateElement("d");
             node.SetAttribute("u", fileInfo.Name);
-            node.SetAttribute("v", "1" );
+
+            string md5 = FileUtils.GetMd5Hash(fileInfo.FullName);
+            int version = getVersion(fileInfo, md5);
+
+           // Debug.Log(string.Format("file:{0}, md5:{1}, dir:{2}", fileInfo.Name, md5, dir));
+
+            node.SetAttribute("v", version.ToString()); 
+            node.SetAttribute("md5", md5);
 
             root.AppendChild(node);
         }
+    }
+
+    private static int getVersion( FileSystemInfo fileInfo, string md5 )
+    {
+        string path = fileInfo.Name;
+        if ( dir.Length > 0){
+            int startIdx = 1;
+            path = dir.Substring( startIdx, dir.Length-startIdx) + "/" + fileInfo.Name;
+        }
+
+        int newV = 0;
+
+        ILoadFile file = loadFileMgr.getFile( path );
+        if( file != null ){
+            int oldV = file.Version;
+            string oldMd5 = file.Md5;
+              
+            newV = oldV;
+
+            bool ret = oldMd5.Equals(md5);
+            if (!ret ){
+                newV += 1;
+            }
+
+           // Debug.Log(string.Format("file:{0}, oldV:{1}: newV:{2}", fileInfo.Name, oldV, newV ));
+        }else{
+            newV = 1;
+        }
+        return newV;
     }
 }

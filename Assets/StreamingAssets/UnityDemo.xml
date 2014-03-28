@@ -1,0 +1,61 @@
+<gameObjects>
+  <scenes name="Assets/UnityDemo.unity">
+    <gameObject name="cube_1" asset="cube_1.assetbundle">
+      <transform>
+        <position>
+          <x>3.114374</x>
+          <y>1</y>
+          <z>0</z>
+        </position>
+        <rotation>
+          <x>0</x>
+          <y>0</y>
+          <z>0</z>
+        </rotation>
+        <scale>
+          <x>1</x>
+          <y>1</y>
+          <z>1</z>
+        </scale>
+      </transform>
+    </gameObject>
+    <gameObject name="Main Camera" asset="Main Camera.assetbundle">
+      <transform>
+        <position>
+          <x>0</x>
+          <y>1</y>
+          <z>-10</z>
+        </position>
+        <rotation>
+          <x>0</x>
+          <y>0</y>
+          <z>0</z>
+        </rotation>
+        <scale>
+          <x>1</x>
+          <y>1</y>
+          <z>1</z>
+        </scale>
+      </transform>
+    </gameObject>
+    <gameObject name="cube_2" asset="cube_2.assetbundle">
+      <transform>
+        <position>
+          <x>-3.734923</x>
+          <y>1</y>
+          <z>0</z>
+        </position>
+        <rotation>
+          <x>0</x>
+          <y>0</y>
+          <z>0</z>
+        </rotation>
+        <scale>
+          <x>1</x>
+          <y>1</y>
+          <z>1</z>
+        </scale>
+      </transform>
+    </gameObject>
+  </scenes>
+</gameObjects>

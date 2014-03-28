@@ -10,8 +10,7 @@ namespace UnityDemo.manager
     public class LoadManager : ILoadManger
     {
         private static ILoadManger instance;
-        private ILoadFileManager loadFileManager;
-
+  
         private LoadManager() { }
 
         public static ILoadManger getIntance()
@@ -22,10 +21,12 @@ namespace UnityDemo.manager
             return instance;
         }
 
-        public IEnumerator loadUrl(string url, int version, LoadFunishHandler callback = null, string filename = "")
+        public IEnumerator loadUrl(string url, LoadFunishHandler callback = null, string filename = "")
         {
-            WWW loader = WWW.LoadFromCacheOrDownload(url, version);
-           
+            int version = getVersion(url);
+            WWW loader = WWW.LoadFromCacheOrDownload( url,version);
+            Debug.Log(string.Format("Load Asset url:{0}, version:{1}", url, version));
+
             yield return loader;
 
             if (loader.error != null){
@@ -37,6 +38,32 @@ namespace UnityDemo.manager
             }
 
             loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
+        }
+
+        private int getVersion(string url)
+        {
+            int v = 0;
+            int index = url.LastIndexOf( "?" );
+     
+            if( index >= 0 ){
+                int startIndex = index + 1;
+                string str = url.Substring( startIndex, url.Length-startIndex);
+       
+                if (str.Length >= 0)
+                {
+                    string[] paramlist = str.Split('&');
+                    foreach (string item in paramlist)
+                    {
+                        string[] list = item.Split('=');
+                        if (list.Length == 2 && list[0] == "v")
+                        {
+                            v = int.Parse(list[1]);
+                        }
+                    }
+                }
+            }
+
+            return v;
         }
     }
 }
