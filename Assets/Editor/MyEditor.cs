@@ -91,8 +91,8 @@ public class MyEditor : Editor
 
     }
 
-    [MenuItem("Custom Editor/Export Scenes To XML")]
-    static void ExportXML()
+    [MenuItem("Custom Editor/Export Scene To XML")]
+    static void ExportSceneToXML()
     {
         string filepath = Application.dataPath + "/my.xml";
         if (File.Exists(filepath))
@@ -257,7 +257,7 @@ public class MyEditor : Editor
         {
             XmlElement node = xmlDoc.CreateElement("d");
             node.SetAttribute("u", fileInfo.Name);
-            node.SetAttribute("v", "11" );
+            node.SetAttribute("v", "1" );
 
             root.AppendChild(node);
         }

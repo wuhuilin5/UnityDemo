@@ -59,7 +59,6 @@
      <Compile Include="Assets\Scripts\SmartUpdate.cs" />
      <Compile Include="Assets\Scripts\TestBinding.cs" />
      <None Include="Assets\Res\version.txt" />
-     <None Include="Assets\StreamingAssets\files - 副本.xml" />
      <None Include="Assets\StreamingAssets\files.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

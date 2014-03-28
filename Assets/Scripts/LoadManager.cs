@@ -36,7 +36,7 @@ namespace UnityDemo.manager
                     callback( loader.assetBundle, filename );
             }
 
-            loader.assetBundle.Unload(false);
+            loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
         }
     }
 }

@@ -11,8 +11,14 @@ public class LoadAssets : MonoBehaviour
 {
     public static Dictionary<string, string[]> AssetMap;
 
+    private ILoadManger loadMgr;
+    private ILoadFileManager loadFileMgr;
+
     void Start()
     {
+        loadMgr = LoadManager.getIntance();
+        loadFileMgr = LoadFileManager.getIntance();
+
         initAssetMap();
         loadAssets();
 
@@ -26,8 +32,7 @@ public class LoadAssets : MonoBehaviour
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(filePath);
-
-            ILoadFileManager loadFileMgr = new LoadFileManager( xmlDoc );
+            loadFileMgr.setData(xmlDoc);
         }
     }
 
@@ -47,7 +52,7 @@ public class LoadAssets : MonoBehaviour
             string filename = item.Key;
 
             string url = FileUtils.getAssetBundlePath(filename);
-            StartCoroutine(LoadManager.getIntance().loadUrl(url, 1, onLoadComplete, filename));
+            StartCoroutine( loadMgr.loadUrl(url, 1, onLoadComplete, filename));
         }
     }
 

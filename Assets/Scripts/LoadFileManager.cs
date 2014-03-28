@@ -11,17 +11,28 @@ namespace UnityDemo.manager
 {
     public class LoadFileManager: ILoadFileManager
 	{
+        private static ILoadFileManager instance;
+
 		private Dictionary<string, ILoadFile> fileMap = new Dictionary<string, ILoadFile>();
 		private string dir = "";
-		
+
+        private LoadFileManager() { }
+
+        public static ILoadFileManager getIntance()
+        {
+            if (instance == null)
+                instance = new LoadFileManager();
+
+            return instance;
+        }
 
 		//XmlDocument xmldoc = new XmlDocument();
-        //xmldoc.Load(filepath);   使用时需要把 xml load好
-		
-		public LoadFileManager( XmlDocument xmlDoc )
+        //xmldoc.Load(filepath);  
+		public void setData( XmlDocument xmlDoc )
 		{
-			XmlNodeList nodelist = xmlDoc.SelectSingleNode("fs").ChildNodes;  //dir
-			
+            fileMap.Clear();
+
+			XmlNodeList nodelist = xmlDoc.SelectSingleNode("fs").ChildNodes; 
 			foreach( XmlElement node in nodelist )
 			{
 				dir = "";
