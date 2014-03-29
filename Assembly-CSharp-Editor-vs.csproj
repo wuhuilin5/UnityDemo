@@ -47,7 +47,6 @@
      <Compile Include="Assets\Editor\MyEditor.cs" />
      <None Include="Assets\Res\version.txt" />
      <None Include="Assets\StreamingAssets\UnityDemo.xml" />
-     <None Include="Assets\NewShader.shader" />
      <None Include="Assets\StreamingAssets\assetbundle\a\d.txt" />
      <None Include="Assets\StreamingAssets\files.xml" />
  <Reference Include="UnityEditor.Graphs">

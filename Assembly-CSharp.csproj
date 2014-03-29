@@ -45,8 +45,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\FileUtils.cs" />
+     <Compile Include="Assets\Scripts\GlobalApi.cs" />
      <Compile Include="Assets\Scripts\Globals.cs" />
      <Compile Include="Assets\Scripts\IFileUtils.cs" />
+     <Compile Include="Assets\Scripts\IGlobalApi.cs" />
      <Compile Include="Assets\Scripts\ILoadFile.cs" />
      <Compile Include="Assets\Scripts\ILoadFileManager.cs" />
      <Compile Include="Assets\Scripts\ILoadManger.cs" />
@@ -61,7 +63,6 @@
      <Compile Include="Assets\Scripts\TestBinding.cs" />
      <None Include="Assets\Res\version.txt" />
      <None Include="Assets\StreamingAssets\UnityDemo.xml" />
-     <None Include="Assets\NewShader.shader" />
      <None Include="Assets\StreamingAssets\assetbundle\a\d.txt" />
      <None Include="Assets\StreamingAssets\files.xml" />
   </ItemGroup>
