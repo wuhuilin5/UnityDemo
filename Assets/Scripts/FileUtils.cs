@@ -22,7 +22,7 @@ namespace UnityDemo.Utils
 #else
 	string.Empty;
 #endif
-        private static ILoadFileManager loadFileMgr = LoadFileManager.getIntance();
+        private static System.Func<string, int> _getVersion = Globals.Api.loadFileManager.getVersion;
 
         public FileUtils ()
         {
@@ -32,7 +32,7 @@ namespace UnityDemo.Utils
         {
             string tempPath = "assetbundle/" + name + ".assetbundle";
             
-            tempPath += "?v=" + loadFileMgr.getVersion(tempPath);
+            tempPath += "?v=" + _getVersion(tempPath);
 
             return StreamingAssetRootPath + tempPath;
         }

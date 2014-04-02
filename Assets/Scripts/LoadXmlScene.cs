@@ -6,13 +6,15 @@ using System.Xml;
 using UnityDemo.Utils;
 using UnityDemo.manager;
 using UnityDemo.interfaces.manager;
+using UnityDemo;
 
 public class LoadXmlScene : MonoBehaviour {
 
     private ILoadManger loadMgr;
 
 	void Start () {
-        loadMgr = LoadManager.getIntance();
+        loadMgr = Globals.Api.loadManager;
+		
         LoadScene();
 	}
 	

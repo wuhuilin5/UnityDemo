@@ -7,19 +7,22 @@ namespace UnityDemo.manager
 {
     public delegate void LoadFunishHandler( AssetBundle asset, string filename = null);
 
-    public class LoadManager : ILoadManger
+    public class LoadManager : MonoBehaviour, ILoadManger
     {
         private static ILoadManger instance;
   
-        private LoadManager() { }
-
-        public static ILoadManger getIntance()
-        {
-            if (instance == null)
-                instance = new LoadManager();
-
-            return instance;
-        }
+		void Awake(){
+			Debug.Log( "Awake LoadManager.." );
+		}
+//        private LoadManager() { }
+//
+//        public static ILoadManger getIntance()
+//        {
+//            if (instance == null)
+//                instance = new LoadManager();
+//
+//            return instance;
+//        }
 
         public IEnumerator loadUrl(string url, LoadFunishHandler callback = null, string filename = null )
         {
@@ -65,6 +68,7 @@ namespace UnityDemo.manager
                         if (list.Length == 2 && list[0] == "v")
                         {
                             v = int.Parse(list[1]);
+                            break;
                         }
                     }
                 }

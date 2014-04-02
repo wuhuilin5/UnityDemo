@@ -36,8 +36,8 @@ namespace UnityDemo
         {
             if (api == null)
             {
-                api = new GlobalApi();
-                api.init();
+                api = GlobalApi.getInstance();
+				api.init();
             }
         }
 

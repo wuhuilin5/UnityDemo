@@ -8,8 +8,8 @@ namespace UnityDemo.interfaces.api
 {
     public interface IGlobalApi
     {
-        void init();
-
+		void init();
+		
         ILoadFileManager loadFileManager { set; get; }
         ILoadManger loadManager { set; get; }
     }

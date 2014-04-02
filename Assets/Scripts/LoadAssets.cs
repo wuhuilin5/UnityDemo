@@ -6,6 +6,8 @@ using UnityDemo.manager;
 using UnityDemo.Utils;
 using UnityEngine;
 
+using UnityDemo;
+
 public class LoadAssets : MonoBehaviour
 {
     public static Dictionary<string, string[]> AssetMap;
@@ -14,7 +16,7 @@ public class LoadAssets : MonoBehaviour
 
     void Start()
     {
-        loadMgr = LoadManager.getIntance();
+        loadMgr = Globals.Api.loadManager;
  
         initAssetMap();
         loadAssets();

@@ -10,25 +10,29 @@ using UnityEngine;
 
 namespace UnityDemo.manager
 {
-    public class LoadFileManager: ILoadFileManager
+    public class LoadFileManager: MonoBehaviour, ILoadFileManager
 	{
         private static ILoadFileManager instance;
 
 		private Dictionary<string, ILoadFile> fileMap = new Dictionary<string, ILoadFile>();
 		private string dir = "";
+		
+		void Awake(){
+			init();
+		}
+		
+//        private LoadFileManager() 
+//        {
+//            init();
+//        }
 
-        private LoadFileManager() 
-        {
-            init();
-        }
-
-        public static ILoadFileManager getIntance()
-        {
-            if (instance == null)
-                instance = new LoadFileManager();
-
-            return instance;
-        }
+//        public static ILoadFileManager getIntance()
+//        {
+//            if (instance == null)
+//                instance = new LoadFileManager();
+//
+//            return instance;
+//        }
 
         private void init()
         {
