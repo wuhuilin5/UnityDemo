@@ -89,15 +89,15 @@ public class LoadXmlScene : MonoBehaviour {
     {
         string name = param[0].ToString();
         string url = FileUtils.getAssetBundlePath(name);
-
-        StartCoroutine(loadMgr.loadUrl(url, delegate(AssetBundle asset, string filename)
-        {
-            Vector3 pos = (Vector3)param[1];
+	
+        loadMgr.loadUrl(url, delegate( AssetBundle asset, string filename )
+		{ 	
+			Vector3 pos = (Vector3)param[1];
             Vector3 rot = (Vector3)param[2];
             Vector3 scale = (Vector3)param[3];
 
             GameObject obj = (GameObject)Instantiate(asset.mainAsset, pos, Quaternion.Euler(rot));
             obj.transform.localScale = scale;
-        }));
-    }
+		});
+   }
 }

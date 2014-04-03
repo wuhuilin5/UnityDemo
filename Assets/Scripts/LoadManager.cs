@@ -24,10 +24,25 @@ namespace UnityDemo.manager
 //            return instance;
 //        }
 
-        public IEnumerator loadUrl(string url, LoadFunishHandler callback = null, string filename = null )
+        public void loadUrl(string url, LoadFunishHandler callback = null, string filename = null )
         {
-            int version = getVersion(url);
-            WWW loader = WWW.LoadFromCacheOrDownload( url,version);
+			System.Action<AssetBundle> handler = (asset) => {
+				if( callback != null ){
+					if( filename != null )
+						callback( asset, filename );
+					else
+						callback( asset );
+				}	
+			};
+			
+            StartCoroutine(load( url, handler ));
+        }
+		
+		private IEnumerator load( string url, Action<AssetBundle> callback )
+		{
+			int version = getVersion(url);
+			
+			WWW loader = WWW.LoadFromCacheOrDownload( url,version);
             Debug.Log(string.Format("Load Asset url:{0}, version:{1}", url, version));
 
             yield return loader;
@@ -36,20 +51,13 @@ namespace UnityDemo.manager
                 Debug.Log(String.Format("Load Error:{0}", loader.error));
             }
             else {
-                if (callback != null)
-                {
-                    if (filename != null){
-                        callback(loader.assetBundle, filename);
-                    }
-                    else {
-                        callback(loader.assetBundle);
-                    }
-                }
+               if( callback != null)
+					callback( loader.assetBundle );
             }
-
+			
             loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
-        }
-
+		}
+		
         private int getVersion(string url)
         {
             int v = 0;

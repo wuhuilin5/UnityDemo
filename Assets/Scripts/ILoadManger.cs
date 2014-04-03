@@ -8,7 +8,7 @@ namespace UnityDemo.interfaces.manager
 {
     public interface ILoadManger
     {
-        IEnumerator loadUrl(string url, LoadFunishHandler callback = null, string filename = null );  
+        void loadUrl(string url, LoadFunishHandler callback = null, string filename = null );  
     }
 
 }

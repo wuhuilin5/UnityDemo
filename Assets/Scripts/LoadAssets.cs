@@ -38,7 +38,7 @@ public class LoadAssets : MonoBehaviour
             string filename = item.Key;
 
             string url = FileUtils.getAssetBundlePath(filename);
-            StartCoroutine( loadMgr.loadUrl(url, onLoadComplete, filename));
+            loadMgr.loadUrl(url, onLoadComplete, filename);
         }
     }
 
