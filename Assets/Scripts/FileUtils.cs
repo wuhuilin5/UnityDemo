@@ -14,11 +14,11 @@ namespace UnityDemo.Utils
 
         private static string StreamingAssetRootPath =
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
- "File://" + Application.streamingAssetsPath + "/";
+  Application.streamingAssetsPath + "/";
 #elif UNITY_IPHONE
 	Application.dataPath + "/Raw/";
 #elif UNITY_ANDROID
-	"jar:file://" + Application.dataPath + "!/Assets/";
+	"jar:file://" + Application.dataPath + "!/assets/";
 #else
 	string.Empty;
 #endif
@@ -40,6 +40,8 @@ namespace UnityDemo.Utils
         public static string getXmlPath( string name )
         {
             string tempPath = name + ".xml";
+			//tempPath += "?v=" + _getVersion(tempPath);
+			
             return StreamingAssetRootPath + tempPath;
         }
 
@@ -57,15 +59,10 @@ namespace UnityDemo.Utils
             {
                 oFileStream = new System.IO.FileStream(pathName.Replace("\"", ""), System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
 
-                arrbytHashValue = oMD5Hasher.ComputeHash(oFileStream); //计算指定Stream 对象的哈希值
-
+                arrbytHashValue = oMD5Hasher.ComputeHash(oFileStream); 
                 oFileStream.Close();
-
-                //由以连字符分隔的十六进制对构成的String，其中每一对表示value 中对应的元素；例如“F-2C-4A”
-
                 strHashData = System.BitConverter.ToString(arrbytHashValue);
 
-                //替换-
                 strHashData = strHashData.Replace("-", "");
 
                 strResult = strHashData;

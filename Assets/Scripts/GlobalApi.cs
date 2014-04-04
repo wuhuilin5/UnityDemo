@@ -19,6 +19,7 @@ namespace UnityDemo.api
 			if( _instance == null )
 			{
 				GameObject obj = new GameObject();
+				GameObject.DontDestroyOnLoad( obj );
 				obj.name = "GlobalApi";
 				_instance = obj.AddComponent<GlobalApi>();
 			}	
@@ -37,7 +38,7 @@ namespace UnityDemo.api
 			if( api == null ){
 				GameObject obj = new GameObject(typeof(T).Name );
 				api = obj.AddComponent<T>();
-				api.transform.parent = this.transform;
+				api.transform.parent = this.gameObject.transform;
 			}
 			
 			return api;
