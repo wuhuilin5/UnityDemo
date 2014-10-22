@@ -12,5 +12,9 @@ namespace UnityDemo.interfaces.api
 		
         ILoadFileManager loadFileManager { set; get; }
         ILoadManger loadManager { set; get; }
+
+		UILabel LogLable{ set; }
+
+		void Log( string msg );
     }
 }

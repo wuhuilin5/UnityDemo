@@ -13,7 +13,8 @@ namespace UnityDemo.api
     public class GlobalApi: MonoBehaviour, IGlobalApi
     {
 		private static IGlobalApi _instance;
-		
+		private UILabel mLog;
+
 		public static IGlobalApi getInstance()
 		{
 			if( _instance == null )
@@ -46,5 +47,18 @@ namespace UnityDemo.api
 		
         public ILoadFileManager loadFileManager { set; get; }
         public ILoadManger loadManager { set; get; }
+
+		public UILabel LogLable
+		{
+			set {
+				mLog = value;
+			}
+		}
+		
+		public void Log( string msg )
+		{
+			if(mLog)
+				mLog.text = msg;
+		}
     }
 }

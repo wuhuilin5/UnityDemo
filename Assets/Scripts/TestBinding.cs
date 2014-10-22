@@ -7,15 +7,15 @@ public class TestBinding : MonoBehaviour {
 	public Color color;
 	public Vector3 rot = Vector3.zero;
 	
-	private Transform trans;
+	//private Transform trans;
 	
 	void Start () {
-		trans = this.gameObject.transform;
+		//trans = this.gameObject.transform;
 		gameObject.renderer.material.color = color;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		trans.Rotate( rot );
+		//trans.Rotate( rot );
 	}
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityDemo.manager
 {
-    public delegate void LoadFunishHandler( AssetBundle asset, string filename = null);
+    public delegate void LoadFunishHandler( AssetBundle asset );
 
     public class LoadManager : MonoBehaviour, ILoadManger
     {
@@ -24,25 +24,23 @@ namespace UnityDemo.manager
 //            return instance;
 //        }
 
-        public void loadUrl(string url, LoadFunishHandler callback = null, string filename = null )
+        public void loadUrl(string url, LoadFunishHandler callback = null )
         {
-			System.Action<AssetBundle> handler = (asset) => {
-				if( callback != null ){
-					if( filename != null )
-						callback( asset, filename );
-					else
-						callback( asset );
-				}	
-			};
+//			System.Action<AssetBundle> handler = (asset) => {
+//				if( callback != null ){
+//					Globals.Api.Log("load callbck~");
+//					callback(asset);
+//				}	
+//			};
 			
-            StartCoroutine(load( url, handler ));
+            StartCoroutine(load( url, callback ));
         }
 		
-		private IEnumerator load( string url, Action<AssetBundle> callback )
+		private IEnumerator load( string url, LoadFunishHandler callback )
 		{
 			int version = getVersion(url);
-			
-			WWW loader = WWW.LoadFromCacheOrDownload( url,version);
+			//WWW loader = WWW.LoadFromCacheOrDownload( url,version);
+			WWW loader = new WWW(url);
             Debug.Log(string.Format("Load Asset url:{0}, version:{1}", url, version));
 
             yield return loader;
@@ -51,10 +49,12 @@ namespace UnityDemo.manager
                 Debug.Log(String.Format("Load Error:{0}", loader.error));
             }
             else {
-               if( callback != null)
-					callback( loader.assetBundle );
+				if( callback != null){
+					callback(loader.assetBundle);
+				}
             }
-			
+
+			yield return new WaitForSeconds(0.5f);
             loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
 		}
 		

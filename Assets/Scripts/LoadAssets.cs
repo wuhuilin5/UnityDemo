@@ -38,14 +38,14 @@ public class LoadAssets : MonoBehaviour
             string filename = item.Key;
 
             string url = FileUtils.getAssetBundlePath(filename);
-            loadMgr.loadUrl(url, onLoadComplete, filename);
+            loadMgr.loadUrl(url, onLoadComplete);
         }
     }
 
-    private void onLoadComplete(AssetBundle asset, string filename)
+    private void onLoadComplete(AssetBundle asset)
     {
         GameObject obj;
-        string[] list = AssetMap[filename];
+        string[] list = AssetMap[asset.name];
         if (list == null || list.Length == 0)
         {
             obj = (GameObject)Instantiate(asset.mainAsset);

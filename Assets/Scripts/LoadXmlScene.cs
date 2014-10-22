@@ -11,18 +11,37 @@ using UnityDemo;
 public class LoadXmlScene : MonoBehaviour {
 
     private ILoadManger loadMgr;
-
+	
 	void Start () {
         loadMgr = Globals.Api.loadManager;
 		
+		//loadSceneXml();
         LoadScene();
+	}
+	
+	private void loadSceneXml()
+	{
+		ArrayList list = new ArrayList();
+		list.Add( "Terrain" );
+		list.Add( "Main Camera" );
+		
+		foreach( string name in list ){
+		string filepath = FileUtils.getAssetBundlePath( name );
+		loadMgr.loadUrl( filepath, delegate( AssetBundle asset ){
+		  	GameObject obj = (GameObject)Instantiate(asset.mainAsset);
+			obj.SetActive(true);
+			//obj.transform.position = new Vector3( 0, 0, 0 );
+		  //obj.transform.position = Vector3(0,0,0);
+		});
+		}
 	}
 	
     private void LoadScene()
     {
-        string filepath = Application.streamingAssetsPath + "/UnityDemo.xml";
+       	//string filepath = Application.streamingAssetsPath + "/UnityDemo.xml";
+		string filepath = FileUtils.getXmlPath( "UnityDemo" );
         Debug.Log("filepath " + filepath);
-       
+       	
         if (File.Exists(filepath)) 
         {
             XmlDocument xmldoc = new XmlDocument();
@@ -90,7 +109,7 @@ public class LoadXmlScene : MonoBehaviour {
         string name = param[0].ToString();
         string url = FileUtils.getAssetBundlePath(name);
 	
-        loadMgr.loadUrl(url, delegate( AssetBundle asset, string filename )
+        loadMgr.loadUrl(url, delegate( AssetBundle asset)
 		{ 	
 			Vector3 pos = (Vector3)param[1];
             Vector3 rot = (Vector3)param[2];

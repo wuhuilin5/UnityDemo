@@ -14,7 +14,7 @@ public class LoadScene : MonoBehaviour {
 	string.Empty;
 #endif
 	
-	public static readonly string SceneSuffix = ".unity3d";
+	public static readonly string SceneSuffix = ".assetbundle";
 	private bool isLoadScene = false;
 	
 	private AsyncOperation Sync;

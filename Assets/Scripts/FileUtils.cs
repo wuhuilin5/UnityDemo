@@ -1,4 +1,6 @@
 using System.IO;
+using System.Security.Cryptography;
+	
 using UnityDemo.interfaces;
 using UnityDemo.interfaces.utils;
 using UnityDemo.interfaces.manager;
@@ -14,15 +16,15 @@ namespace UnityDemo.Utils
 
         private static string StreamingAssetRootPath =
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-  Application.streamingAssetsPath + "/";
+  "file:///" + Application.streamingAssetsPath;
 #elif UNITY_IPHONE
-	Application.dataPath + "/Raw/";
+	Application.dataPath + "/Raw";
 #elif UNITY_ANDROID
-	"jar:file://" + Application.dataPath + "!/assets/";
+	Application.streamingAssetsPath;
 #else
 	string.Empty;
 #endif
-        private static System.Func<string, int> _getVersion = Globals.Api.loadFileManager.getVersion;
+//        private static System.Func<string, int> _getVersion = Globals.Api.loadFileManager.getVersion;
 
         public FileUtils ()
         {
@@ -30,9 +32,9 @@ namespace UnityDemo.Utils
 
         public static string getAssetBundlePath(string name)
         {
-            string tempPath = "assetbundle/" + name + ".assetbundle";
+            string tempPath = "/Assetbundle/" + name + ".assetbundle";
             
-            tempPath += "?v=" + _getVersion(tempPath);
+            //tempPath += "?v=" + _getVersion(tempPath);
 
             return StreamingAssetRootPath + tempPath;
         }
@@ -51,13 +53,13 @@ namespace UnityDemo.Utils
             string strHashData = "";
             byte[] arrbytHashValue;
 
-            System.IO.FileStream oFileStream = null;
+            FileStream oFileStream = null;
 
-            System.Security.Cryptography.MD5CryptoServiceProvider oMD5Hasher = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            MD5CryptoServiceProvider oMD5Hasher = new MD5CryptoServiceProvider();
 
             try
             {
-                oFileStream = new System.IO.FileStream(pathName.Replace("\"", ""), System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite);
+                oFileStream = new FileStream(pathName.Replace("\"", ""), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                 arrbytHashValue = oMD5Hasher.ComputeHash(oFileStream); 
                 oFileStream.Close();
