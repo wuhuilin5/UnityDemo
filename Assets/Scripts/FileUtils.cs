@@ -16,11 +16,11 @@ namespace UnityDemo.Utils
 
         private static string StreamingAssetRootPath =
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-  "file:///" + Application.streamingAssetsPath;
+  "file:///" + Application.streamingAssetsPath + "/";   
 #elif UNITY_IPHONE
-	Application.dataPath + "/Raw";
+	"file:///" + Application.dataPath +"/Raw/"  // Application/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/xxx.app/Data/Raw
 #elif UNITY_ANDROID
-	Application.streamingAssetsPath;
+	Application.streamingAssetsPath + "/";  // jar:file:///data/app/xxx.xxx.xxx.apk/!/assets
 #else
 	string.Empty;
 #endif
@@ -32,7 +32,7 @@ namespace UnityDemo.Utils
 
         public static string getAssetBundlePath(string name)
         {
-            string tempPath = "/Assetbundle/" + name + ".assetbundle";
+            string tempPath = "Assetbundle/" + name + ".assetbundle";
             
             //tempPath += "?v=" + _getVersion(tempPath);
 

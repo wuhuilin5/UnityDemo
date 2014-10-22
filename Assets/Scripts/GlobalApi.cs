@@ -21,7 +21,7 @@ namespace UnityDemo.api
 			{
 				GameObject obj = new GameObject();
 				GameObject.DontDestroyOnLoad( obj );
-				obj.name = "GlobalApi";
+				obj.name = "_GlobalApi";
 				_instance = obj.AddComponent<GlobalApi>();
 			}	
 			

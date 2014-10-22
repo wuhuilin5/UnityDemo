@@ -42,9 +42,10 @@ public class LoadAssets : MonoBehaviour
         }
     }
 
-    private void onLoadComplete(AssetBundle asset)
+    private void onLoadComplete(WWW loader)
     {
         GameObject obj;
+		AssetBundle asset = loader.assetBundle;
         string[] list = AssetMap[asset.name];
         if (list == null || list.Length == 0)
         {

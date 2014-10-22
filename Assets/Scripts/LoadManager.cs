@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityDemo.manager
 {
-    public delegate void LoadFunishHandler( AssetBundle asset );
+    public delegate void LoadFunishHandler( WWW loader );
 
     public class LoadManager : MonoBehaviour, ILoadManger
     {
@@ -50,7 +50,7 @@ namespace UnityDemo.manager
             }
             else {
 				if( callback != null){
-					callback(loader.assetBundle);
+					callback(loader);
 				}
             }
 
