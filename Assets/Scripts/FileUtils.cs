@@ -32,7 +32,7 @@ namespace UnityDemo.Utils
 
         public static string getAssetBundlePath(string name)
         {
-            string tempPath = "Assetbundle/" + name + ".assetbundle";
+            string tempPath = "Assetbundle/" + name + ".unity3d";
             
             //tempPath += "?v=" + _getVersion(tempPath);
 
@@ -46,6 +46,12 @@ namespace UnityDemo.Utils
 			
             return StreamingAssetRootPath + tempPath;
         }
+
+		public static string GetAssetPath(string name)
+		{
+			return StreamingAssetRootPath + name;
+		}
+
 
         public static string GetMd5Hash(string pathName)
         {
@@ -77,5 +83,17 @@ namespace UnityDemo.Utils
 
             return strResult;
         }
+
+		public static void SaveFile( string filepath, byte[] data )
+		{
+			if(File.Exists(filepath))
+				File.Delete(filepath);
+
+			FileStream stream = new FileStream( filepath, FileMode.Create );
+			
+			stream.Write( data, 0, data.Length );
+			stream.Flush();
+			stream.Close();
+		}
 	}
 }

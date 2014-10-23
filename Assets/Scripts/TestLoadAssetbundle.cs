@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
 
 using UnityDemo;
 using UnityDemo.Utils;
@@ -21,9 +22,13 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	}
 
 	void Start () {
-		LoadAssetBundle("ItemContainer", LoadItemContainerComplete);
-//		LoadAssetBundle("Backdrop", LoadTextureComplete);
-		mLoadManager.loadUrl("http://www.baidu.com/img/bd_logo1.png", LoadTextureComplete);
+		System.Action<int> callback = (count) => {
+			LoadAssetBundle("ItemContainer", LoadItemContainerComplete );
+		};
+
+		loadShareAssetBundles(callback);
+
+//		mLoadManager.loadUrl("http://www.baidu.com/img/bd_logo1.png", LoadTextureComplete);
 	}
 	
 	// Update is called once per frame
@@ -31,15 +36,36 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	
 	}
 
+	void loadShareAssetBundles( System.Action<int> finishCallback)
+	{
+		int count = 0;
+		LoadFunishHandler callback = delegate(WWW loader) {
+			count++;
+			if(count==2 && finishCallback != null){
+				finishCallback(count);
+			}
+			loader.assetBundle.LoadAll();
+			//GameObject go = GameObject.Instantiate(loader.assetBundle.mainAsset) as GameObject;
+		};
+
+		mLoadManager.loadUrl(FileUtils.getAssetBundlePath("Fantasy Atlas"), callback, false);
+		mLoadManager.loadUrl(FileUtils.getAssetBundlePath("Wooden Atlas"), callback, false);
+	}
+
 	void LoadAssetBundle(string assetbundleName, LoadFunishHandler callback) {
 		string filePath = FileUtils.getAssetBundlePath(assetbundleName);
 		Globals.Api.Log(filePath);
-		mLoadManager.loadUrl(filePath, callback);
+		mLoadManager.loadUrl(filePath, callback, true);
 	}
 
 	void LoadTextureComplete(WWW loader)
 	{
-		mTexture.mainTexture = loader.texture;
+//		mTexture.mainTexture = loader.texture;
+//
+//		string filepath = FileUtils.GetAssetPath("logo.jpg");
+//		if(!File.Exists(filepath))
+//			FileUtils.SaveFile("logo.jpg", loader.bytes);
+//		GameObject obj = loader.assetBundle.mainAsset as GameObject;
 	}
 
 	void LoadItemContainerComplete(WWW loader) {
@@ -48,7 +74,7 @@ public class TestLoadAssetbundle : MonoBehaviour {
 		if( asset == null )
 			Globals.Api.Log("asset is null");
 
-		Object prefeb = asset.Load("ItemContainer");
+		Object prefeb = asset.Load("ItemContainer", typeof(GameObject));
 		Globals.Api.Log("aseet load");
 	
 		//GameObject obj = NGUITools.AddChild(this.gameObject, prefeb);

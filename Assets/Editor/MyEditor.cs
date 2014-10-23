@@ -15,8 +15,8 @@ public class MyEditor : Editor
 {
 //    private static ILoadFileManager loadFileMgr = Globals.Api.loadFileManager;
 
-	private static readonly string AssetBundleDir = Application.streamingAssetsPath + Path.DirectorySeparatorChar + "AssetBundle" + Path.DirectorySeparatorChar;
-	private static readonly string AssetBundleExt = ".assetbundle";
+	private static readonly string AssetBundleDir = Application.streamingAssetsPath + "/AssetBundle/";
+	private static readonly string AssetBundleExt = ".unity3d";
 
     [MenuItem("Custom Editor/Create AssetBundles")]
     static void CreateAssetBundles()
@@ -30,7 +30,7 @@ public class MyEditor : Editor
             Debug.Log("sourcePath: " + sourcePath);
 
             //移动平台需要在最后添加一个参数：android: BuildTarget.Android, ios: BuildTarget.iPhone
-            bool ret = BuildPipeline.BuildAssetBundle(obj, null, targetPath, BuildAssetBundleOptions.CollectDependencies);
+            bool ret = BuildPipeline.BuildAssetBundle(obj, null, targetPath, BuildAssetBundleOptions.DeterministicAssetBundle);
 
             if (ret)
             {
@@ -57,9 +57,13 @@ public class MyEditor : Editor
 			string targetPath = AssetBundleDir + obj.name + AssetBundleExt;
 			
 			Debug.Log("sourcePath: " + sourcePath);
-			
+
+			var options = BuildAssetBundleOptions.CollectDependencies |
+				BuildAssetBundleOptions.CompleteAssets |
+					BuildAssetBundleOptions.DeterministicAssetBundle;
+
 			//移动平台需要在最后添加一个参数：android: BuildTarget.Android, ios: BuildTarget.iPhone
-			bool ret = BuildPipeline.BuildAssetBundle(obj, null, targetPath, BuildAssetBundleOptions.CollectDependencies, BuildTarget.Android);
+			bool ret = BuildPipeline.BuildAssetBundle(obj, null, targetPath, options, BuildTarget.Android);
 			
 			if (ret)
 			{
@@ -75,6 +79,69 @@ public class MyEditor : Editor
 		//        ExportDirToXml();
 	}
 
+	[MenuItem("Custom Editor/Create all Prefab - Android")]
+	static void BuildAllPrefab()
+	{
+		BuildPipeline.PushAssetDependencies();
+
+		BuildDirectory("Assets/Prefebs/Atlas", true);  // Altas
+		BuildDirectory("Assets/Prefebs", false);
+	
+		BuildPipeline.PopAssetDependencies();
+
+		AssetDatabase.Refresh();
+	}
+
+	static void BuildDirectory( string dirName, bool isDependencies )
+	{
+		string[] files = Directory.GetFiles(dirName, "*", SearchOption.TopDirectoryOnly);
+
+		foreach( string filePath in files)
+		{
+			if(!isDependencies)
+				BuildPipeline.PushAssetDependencies();
+
+			Object obj = LoadMainAssetAtPath(filePath);
+			if (obj == null) 
+				continue;
+			
+			string targetPath = AssetBundleDir + obj.name + AssetBundleExt;
+			BuildAssetBundler( obj, null, targetPath, BuildTarget.StandaloneWindows);
+
+			if(!isDependencies)
+				BuildPipeline.PopAssetDependencies();
+		}
+	}
+
+	static bool BuildAssetBundler(Object mainAsset, Object[] assets, string pathName, BuildTarget buildTarget )
+	{
+		var options = BuildAssetBundleOptions.CollectDependencies |
+			BuildAssetBundleOptions.CompleteAssets |
+				BuildAssetBundleOptions.DeterministicAssetBundle;
+
+		bool ret = BuildPipeline.BuildAssetBundle(mainAsset, assets, pathName, options, buildTarget);
+		if (ret){
+			Debug.Log(string.Format("export successed! {0}", pathName));
+		}
+		else{
+			Debug.Log(string.Format("export failed! {0}", pathName));
+		}
+
+		return ret;
+	}
+
+	static Object LoadMainAssetAtPath(string filePath)
+	{
+		int startIndex = filePath.LastIndexOf(".");
+		int length = filePath.Length - startIndex;
+		
+		string ext = filePath.Substring(filePath.LastIndexOf("."), length);
+		if (ext == ".meta")  
+			return null;
+		
+		string newpath = filePath.Replace("\\", "/");
+		return AssetDatabase.LoadMainAssetAtPath(newpath);
+	}
 
 //    [MenuItem("Custom Editor/Create AssetBundle All")]
 //    static void CreateAssetBundleAll()

@@ -10,7 +10,7 @@ namespace UnityDemo.manager
     public class LoadManager : MonoBehaviour, ILoadManger
     {
         private static ILoadManger instance;
-  
+  		
 		void Awake(){
 			Debug.Log( "Awake LoadManager.." );
 		}
@@ -24,7 +24,7 @@ namespace UnityDemo.manager
 //            return instance;
 //        }
 
-        public void loadUrl(string url, LoadFunishHandler callback = null )
+        public void loadUrl(string url, LoadFunishHandler callback = null, bool isUnload = true )
         {
 //			System.Action<AssetBundle> handler = (asset) => {
 //				if( callback != null ){
@@ -33,10 +33,10 @@ namespace UnityDemo.manager
 //				}	
 //			};
 			
-            StartCoroutine(load( url, callback ));
+            StartCoroutine(load(url, callback, isUnload));
         }
 		
-		private IEnumerator load( string url, LoadFunishHandler callback )
+		private IEnumerator load(string url, LoadFunishHandler callback, bool isUnload )
 		{
 			int version = getVersion(url);
 			//WWW loader = WWW.LoadFromCacheOrDownload( url,version);
@@ -54,18 +54,20 @@ namespace UnityDemo.manager
 				}
             }
 
-			yield return new WaitForSeconds(0.5f);
-            loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
+			if(isUnload){
+				yield return new WaitForSeconds(0.5f);
+            	loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
+			}
 		}
 		
         private int getVersion(string url)
         {
-            int v = 0;
-            int index = url.LastIndexOf( "?" );
+            int v = 0; 
+            int index = url.LastIndexOf("?");
      
             if( index >= 0 ){
                 int startIndex = index + 1;
-                string str = url.Substring( startIndex, url.Length-startIndex);
+                string str = url.Substring(startIndex, url.Length-startIndex);
        
                 if (str.Length >= 0)
                 {
