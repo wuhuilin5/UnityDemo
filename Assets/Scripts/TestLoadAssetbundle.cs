@@ -16,11 +16,11 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	public UITexture mTexture;
 
 	// Use this for initialization
-	private ILoadManger mLoadManager;
+	private IAssetManager mAssetMgr;
 
 	void Awake() {
 		Globals.Api.LogLable = mLblLog;
-		mLoadManager = Globals.Api.loadManager;
+		mAssetMgr = Globals.Api.AssetManager;
 	}
 
 	void Start () {
@@ -30,7 +30,7 @@ public class TestLoadAssetbundle : MonoBehaviour {
 
 		loadShareAssetBundles(callback);
 
-//		mLoadManager.loadUrl("http://www.baidu.com/img/bd_logo1.png", LoadTextureComplete);
+//		mAssetMgr.LoadAsset("http://www.baidu.com/img/bd_logo1.png", LoadTextureComplete);
 	}
 	
 	// Update is called once per frame
@@ -42,22 +42,22 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	void loadShareAssetBundles( System.Action<int> finishCallback)
 	{
 		int count = 0;
-		LoadFunishHandler callback = delegate(WWW loader) {
+		LoadFunishHandler callback = delegate(AssetBundle asset) {
 			count++;
 			if(count==2 && finishCallback != null){
 				finishCallback(count);
 			}
-			loader.assetBundle.LoadAll();
+			asset.LoadAll();
 			//GameObject go = GameObject.Instantiate(loader.assetBundle.mainAsset) as GameObject;
 		};
 
-		mLoadManager.loadUrl(FileUtils.getAssetBundlePath("Fantasy Atlas"), callback, false);
-		mLoadManager.loadUrl(FileUtils.getAssetBundlePath("Wooden Atlas"), callback, false);
+		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("Fantasy Atlas"), callback);
+		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("Wooden Atlas"), callback);
 	}
 
-	void loadUIRootComplete(WWW loader)
+	void loadUIRootComplete(AssetBundle asset)
 	{
-		Object prefeb = loader.assetBundle.Load("UIRoot", typeof(GameObject));
+		Object prefeb = asset.Load("UIRoot", typeof(GameObject));
 		GameObject go = GameObject.Instantiate(prefeb) as GameObject;
 		mAnchorLeft = GameObject.Find("Anchor-left");
 		mAnchorRight = GameObject.Find("Anchor-right");
@@ -68,10 +68,10 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	void LoadAssetBundle(string assetbundleName, LoadFunishHandler callback) {
 		string filePath = FileUtils.getAssetBundlePath(assetbundleName);
 		Globals.Api.Log(filePath);
-		mLoadManager.loadUrl(filePath, callback, true);
+		mAssetMgr.LoadAsset(filePath, callback);
 	}
 
-	void LoadTextureComplete(WWW loader)
+	void LoadTextureComplete(AssetBundle asset)
 	{
 //		mTexture.mainTexture = loader.texture;
 //
@@ -81,8 +81,7 @@ public class TestLoadAssetbundle : MonoBehaviour {
 //		GameObject obj = loader.assetBundle.mainAsset as GameObject;
 	}
 
-	void LoadItemContainerComplete(WWW loader) {
-		AssetBundle asset = loader.assetBundle;
+	void LoadItemContainerComplete(AssetBundle asset) {
 		Object prefeb = asset.Load("ItemContainer", typeof(GameObject));
 
 		//GameObject obj = NGUITools.AddChild(this.gameObject, prefeb);

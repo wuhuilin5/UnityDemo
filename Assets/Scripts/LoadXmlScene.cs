@@ -10,10 +10,10 @@ using UnityDemo;
 
 public class LoadXmlScene : MonoBehaviour {
 
-    private ILoadManger loadMgr;
+    private IAssetManager assetMgr;
 	
 	void Start () {
-        loadMgr = Globals.Api.loadManager;
+        assetMgr = Globals.Api.AssetManager;
 		
 		//loadSceneXml();
         LoadScene();
@@ -27,8 +27,8 @@ public class LoadXmlScene : MonoBehaviour {
 		
 		foreach( string name in list ){
 		string filepath = FileUtils.getAssetBundlePath( name );
-		loadMgr.loadUrl( filepath, delegate( WWW loader ){
-				GameObject obj = (GameObject)Instantiate(loader.assetBundle.mainAsset);
+		assetMgr.LoadAsset( filepath, delegate(AssetBundle asset ){
+				GameObject obj = (GameObject)Instantiate(asset.mainAsset);
 			obj.SetActive(true);
 			//obj.transform.position = new Vector3( 0, 0, 0 );
 		  //obj.transform.position = Vector3(0,0,0);
@@ -109,13 +109,13 @@ public class LoadXmlScene : MonoBehaviour {
         string name = param[0].ToString();
         string url = FileUtils.getAssetBundlePath(name);
 	
-        loadMgr.loadUrl(url, delegate( WWW loader)
+        assetMgr.LoadAsset(url, delegate( AssetBundle asset)
 		{ 	
 			Vector3 pos = (Vector3)param[1];
             Vector3 rot = (Vector3)param[2];
             Vector3 scale = (Vector3)param[3];
 
-			GameObject obj = (GameObject)Instantiate(loader.assetBundle.mainAsset, pos, Quaternion.Euler(rot));
+			GameObject obj = (GameObject)Instantiate(asset.mainAsset, pos, Quaternion.Euler(rot));
             obj.transform.localScale = scale;
 		});
    }

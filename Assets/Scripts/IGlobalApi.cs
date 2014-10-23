@@ -11,7 +11,7 @@ namespace UnityDemo.interfaces.api
 		void init();
 		
         ILoadFileManager loadFileManager { set; get; }
-        ILoadManger loadManager { set; get; }
+        IAssetManager AssetManager { set; get; }
 
 		UILabel LogLable{ set; }
 

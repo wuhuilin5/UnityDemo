@@ -31,7 +31,7 @@ namespace UnityDemo.api
         public void init()
         {
 			loadFileManager = createApi<LoadFileManager>();
-			loadManager = createApi<LoadManager>();
+			AssetManager = createApi<AssetManager>();
 		}
 		
 		private T createApi<T>() where T : Component{
@@ -46,7 +46,7 @@ namespace UnityDemo.api
 		}
 		
         public ILoadFileManager loadFileManager { set; get; }
-        public ILoadManger loadManager { set; get; }
+        public IAssetManager AssetManager { set; get; }
 
 		public UILabel LogLable
 		{

@@ -12,11 +12,11 @@ public class LoadAssets : MonoBehaviour
 {
     public static Dictionary<string, string[]> AssetMap;
 
-    private ILoadManger loadMgr;
+    private IAssetManager assetMgr;
 
     void Start()
     {
-        loadMgr = Globals.Api.loadManager;
+        assetMgr = Globals.Api.AssetManager;
  
         initAssetMap();
         loadAssets();
@@ -38,14 +38,13 @@ public class LoadAssets : MonoBehaviour
             string filename = item.Key;
 
             string url = FileUtils.getAssetBundlePath(filename);
-            loadMgr.loadUrl(url, onLoadComplete);
+            assetMgr.LoadAsset(url, onLoadComplete);
         }
     }
 
-    private void onLoadComplete(WWW loader)
+    private void onLoadComplete(AssetBundle asset)
     {
         GameObject obj;
-		AssetBundle asset = loader.assetBundle;
         string[] list = AssetMap[asset.name];
         if (list == null || list.Length == 0)
         {

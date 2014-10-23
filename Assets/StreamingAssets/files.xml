@@ -1,19 +1,12 @@
 <fs>
-  <d n="assetbundle">
+  <d n="Assetbundle">
     <d n="a">
       <d u="d.txt" v="1" md5="D41D8CD98F00B204E9800998ECF8427E" />
     </d>
-    <d u="all.assetbundle" v="1" md5="B0DDE846F4099B08B13FC47AEE233BF5" />
-    <d u="Cube.assetbundle" v="1" md5="1A7A6F1D6903220ECED46D7F75C250ED" />
-    <d u="cube_1.assetbundle" v="5" md5="60FDF17ED519AA11EC43EAB445C25C44" />
-    <d u="cube_2.assetbundle" v="3" md5="BB7826374ACCEB7CC57BB08C6605BFB2" />
-    <d u="Main Camera.assetbundle" v="2" md5="1366E452C324F2441815E598B85AE933" />
-    <d u="Terrain.assetbundle" v="1" md5="D237B1B32BE5F502B4E1C787F19D5E67" />
+    <d u="Fantasy Atlas.unity3d" v="1" md5="01CF829EA2E97FC01C6A50DE36EEF889" />
+    <d u="ItemContainer.unity3d" v="1" md5="D558F59E24ABF0FE850D3554ECB77C71" />
+    <d u="UIRoot.unity3d" v="1" md5="E055686A98637ACE878454B7A588A0A8" />
+    <d u="Wooden Atlas.unity3d" v="1" md5="B79F21FB0CDF514316F6611C51FFB589" />
   </d>
-  <d n="ui">
-    <d u="LogView.prefab" v="1" md5="6F748C3D290F00D245322C38E6BE0297" />
-  </d>
-  <d u="Main Camera.assetbundle" v="1" md5="3FBFDC956A3B5846553E295875612E2B" />
-  <d u="UnityDemo.unity3d" v="1" md5="28E9A4594C0B47BC7EA38DEE4376B2B1" />
-  <d u="UnityDemo.xml" v="1" md5="A5AE84D63ECF2A3FDB616058E12A61B7" />
+  <d u="UnityDemo.xml" v="2" md5="36FD095536B22982C9C886D581E724E5" />
 </fs>

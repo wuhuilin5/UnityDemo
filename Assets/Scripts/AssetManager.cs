@@ -5,26 +5,27 @@ using UnityEngine;
 
 namespace UnityDemo.manager
 {
-    public delegate void LoadFunishHandler( WWW loader );
+    public delegate void LoadFunishHandler( AssetBundle asset );
 
-    public class LoadManager : MonoBehaviour, ILoadManger
+    public class AssetManager : MonoBehaviour, IAssetManager
     {
-        private static ILoadManger instance;
+        private static IAssetManager instance;
   		
 		void Awake(){
-			Debug.Log( "Awake LoadManager.." );
+			Debug.Log( "Awake AssetManager.." );
 		}
-//        private LoadManager() { }
+//        private AssetManager() { }
 //
 //        public static ILoadManger getIntance()
 //        {
 //            if (instance == null)
-//                instance = new LoadManager();
+//                instance = new AssetManager();
 //
 //            return instance;
 //        }
 
-        public void loadUrl(string url, LoadFunishHandler callback = null, bool isUnload = true )
+
+        public void LoadAsset(string path, LoadFunishHandler callback = null )
         {
 //			System.Action<AssetBundle> handler = (asset) => {
 //				if( callback != null ){
@@ -33,15 +34,15 @@ namespace UnityDemo.manager
 //				}	
 //			};
 			
-            StartCoroutine(load(url, callback, isUnload));
+			StartCoroutine(load(path, callback));
         }
 		
-		private IEnumerator load(string url, LoadFunishHandler callback, bool isUnload )
+		private IEnumerator load(string path, LoadFunishHandler callback )
 		{
-			int version = getVersion(url);
+			int version = getVersion(path);
 			//WWW loader = WWW.LoadFromCacheOrDownload( url,version);
-			WWW loader = new WWW(url);
-            Debug.Log(string.Format("Load Asset url:{0}, version:{1}", url, version));
+			WWW loader = new WWW(path);
+			Debug.Log(string.Format("Load Asset url:{0}, version:{1}", path, version));
 
             yield return loader;
 
@@ -50,24 +51,23 @@ namespace UnityDemo.manager
             }
             else {
 				if( callback != null){
-					callback(loader);
+					callback(loader.assetBundle);
 				}
             }
 
-			if(isUnload){
-				yield return new WaitForSeconds(0.5f);
-            	loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
-			}
+
+			yield return new WaitForSeconds(0.5f);
+            loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
 		}
 		
-        private int getVersion(string url)
+		private int getVersion(string path)
         {
             int v = 0; 
-            int index = url.LastIndexOf("?");
+			int index = path.LastIndexOf("?");
      
             if( index >= 0 ){
                 int startIndex = index + 1;
-                string str = url.Substring(startIndex, url.Length-startIndex);
+				string str = path.Substring(startIndex, path.Length-startIndex);
        
                 if (str.Length >= 0)
                 {
