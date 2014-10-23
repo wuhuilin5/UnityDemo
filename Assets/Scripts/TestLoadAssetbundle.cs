@@ -10,7 +10,9 @@ using UnityDemo.interfaces.manager;
 public class TestLoadAssetbundle : MonoBehaviour {
 
 	public UILabel mLblLog;
-	public Transform mAnchorLeft;
+	GameObject mAnchorLeft;
+	GameObject mAnchorRight;
+
 	public UITexture mTexture;
 
 	// Use this for initialization
@@ -23,7 +25,7 @@ public class TestLoadAssetbundle : MonoBehaviour {
 
 	void Start () {
 		System.Action<int> callback = (count) => {
-			LoadAssetBundle("ItemContainer", LoadItemContainerComplete );
+			LoadAssetBundle("UIRoot", loadUIRootComplete);
 		};
 
 		loadShareAssetBundles(callback);
@@ -35,6 +37,7 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	void Update () {
 	
 	}
+
 
 	void loadShareAssetBundles( System.Action<int> finishCallback)
 	{
@@ -50,6 +53,16 @@ public class TestLoadAssetbundle : MonoBehaviour {
 
 		mLoadManager.loadUrl(FileUtils.getAssetBundlePath("Fantasy Atlas"), callback, false);
 		mLoadManager.loadUrl(FileUtils.getAssetBundlePath("Wooden Atlas"), callback, false);
+	}
+
+	void loadUIRootComplete(WWW loader)
+	{
+		Object prefeb = loader.assetBundle.Load("UIRoot", typeof(GameObject));
+		GameObject go = GameObject.Instantiate(prefeb) as GameObject;
+		mAnchorLeft = GameObject.Find("Anchor-left");
+		mAnchorRight = GameObject.Find("Anchor-right");
+
+		LoadAssetBundle("ItemContainer", LoadItemContainerComplete );
 	}
 
 	void LoadAssetBundle(string assetbundleName, LoadFunishHandler callback) {
@@ -70,21 +83,14 @@ public class TestLoadAssetbundle : MonoBehaviour {
 
 	void LoadItemContainerComplete(WWW loader) {
 		AssetBundle asset = loader.assetBundle;
-		Globals.Api.Log("loadComplete 2");
-		if( asset == null )
-			Globals.Api.Log("asset is null");
-
 		Object prefeb = asset.Load("ItemContainer", typeof(GameObject));
-		Globals.Api.Log("aseet load");
-	
+
 		//GameObject obj = NGUITools.AddChild(this.gameObject, prefeb);
-		GameObject obj = AddChildToParent(mAnchorLeft.gameObject, prefeb);
-		//UIWidget widget = obj.GetComponent<UIWidget>;
+		GameObject leftContainer = AddChildToParent(mAnchorLeft, prefeb);
+		leftContainer.name = "ItemContainer-left";
 
-		obj.name = "ItemContainer-right";
-
-//		Vector3 pos = obj.transform.position;
-//		obj.transform.position = new Vector3(-240, pos.y, pos.z);
+		GameObject rightContainer = AddChildToParent(mAnchorRight, prefeb);
+		rightContainer.name = "ItemContainer-right";
 	}
 
 	GameObject AddChildToParent( GameObject parent, Object prefeb )

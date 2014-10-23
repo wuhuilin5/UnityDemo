@@ -18,7 +18,7 @@ public class MyEditor : Editor
 	private static readonly string AssetBundleDir = Application.streamingAssetsPath + "/AssetBundle/";
 	private static readonly string AssetBundleExt = ".unity3d";
 
-    [MenuItem("Custom Editor/Create AssetBundles")]
+    //[MenuItem("Custom Editor/Create AssetBundles")]
     static void CreateAssetBundles()
     {
         Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
@@ -47,7 +47,7 @@ public class MyEditor : Editor
     }
 
 	
-	[MenuItem("Custom Editor/Create AssetBundles - Android")]
+	//[MenuItem("Custom Editor/Create AssetBundles - Android")]
 	static void CreateAndAssetBundles_Android()
 	{
 		Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
@@ -79,23 +79,43 @@ public class MyEditor : Editor
 		//        ExportDirToXml();
 	}
 
-	[MenuItem("Custom Editor/Create all Prefab - Android")]
-	static void BuildAllPrefab()
+	[MenuItem("Custom Editor/BuildAssetBundle - Windows")]
+	static void BuildAssetBundle_windows()
+	{
+		BuildAllPrefabToAssetBundles(BuildTarget.StandaloneWindows);
+	}
+
+	[MenuItem("Custom Editor/BuildAssetBundle - Android")]
+	static void BuildAssetBundle_Android()
+	{
+		BuildAllPrefabToAssetBundles(BuildTarget.Android);
+	}
+
+	[MenuItem("Custom Editor/BuildAssetBundle - iPhone")]
+	static void BuildAssetBundle_iPhone()
+	{
+		BuildAllPrefabToAssetBundles(BuildTarget.iPhone);
+	}
+	
+	static void BuildAllPrefabToAssetBundles(BuildTarget buildTarget)
 	{
 		BuildPipeline.PushAssetDependencies();
 
-		BuildDirectory("Assets/Prefebs/Atlas", true);  // Altas
-		BuildDirectory("Assets/Prefebs", false);
+		BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas"), true, buildTarget);  // Altas
+		BuildFiles(GetFiles("Assets/Resources/Prefabs"), false, buildTarget);
 	
 		BuildPipeline.PopAssetDependencies();
 
 		AssetDatabase.Refresh();
 	}
 
-	static void BuildDirectory( string dirName, bool isDependencies )
+	static string[] GetFiles(string dirName)
 	{
-		string[] files = Directory.GetFiles(dirName, "*", SearchOption.TopDirectoryOnly);
+		return Directory.GetFiles(dirName, "*", SearchOption.TopDirectoryOnly);
+	}
 
+	static void BuildFiles(string[] files, bool isDependencies, BuildTarget buildTarget )
+	{
 		foreach( string filePath in files)
 		{
 			if(!isDependencies)
@@ -106,7 +126,7 @@ public class MyEditor : Editor
 				continue;
 			
 			string targetPath = AssetBundleDir + obj.name + AssetBundleExt;
-			BuildAssetBundler( obj, null, targetPath, BuildTarget.StandaloneWindows);
+			BuildAssetBundler( obj, null, targetPath, buildTarget);
 
 			if(!isDependencies)
 				BuildPipeline.PopAssetDependencies();
