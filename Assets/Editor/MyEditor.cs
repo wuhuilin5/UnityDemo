@@ -13,71 +13,10 @@ using UnityDemo;
 
 public class MyEditor : Editor
 {
-//    private static ILoadFileManager loadFileMgr = Globals.Api.loadFileManager;
+   private static ILoadFileManager loadFileMgr = Globals.Api.loadFileManager;
 
 	private static readonly string AssetBundleDir = Application.streamingAssetsPath + "/AssetBundle/";
 	private static readonly string AssetBundleExt = ".unity3d";
-
-    //[MenuItem("Custom Editor/Create AssetBundles")]
-    static void CreateAssetBundles()
-    {
-        Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
-        foreach (Object obj in SelectedAsset)
-        {
-            string sourcePath = AssetDatabase.GetAssetPath(obj);
-			string targetPath = AssetBundleDir + obj.name + AssetBundleExt;
-
-            Debug.Log("sourcePath: " + sourcePath);
-
-            //移动平台需要在最后添加一个参数：android: BuildTarget.Android, ios: BuildTarget.iPhone
-            bool ret = BuildPipeline.BuildAssetBundle(obj, null, targetPath, BuildAssetBundleOptions.DeterministicAssetBundle);
-
-            if (ret)
-            {
-                Debug.Log(obj.name + " export successed! " + targetPath);
-            }
-            else
-            {
-                Debug.Log(obj.name + " export failed");
-            }
-        }
-
-        AssetDatabase.Refresh();
-//        ExportDirToXml();
-    }
-
-	
-	//[MenuItem("Custom Editor/Create AssetBundles - Android")]
-	static void CreateAndAssetBundles_Android()
-	{
-		Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
-		foreach (Object obj in SelectedAsset)
-		{
-			string sourcePath = AssetDatabase.GetAssetPath(obj);
-			string targetPath = AssetBundleDir + obj.name + AssetBundleExt;
-			
-			Debug.Log("sourcePath: " + sourcePath);
-
-			var options = BuildAssetBundleOptions.CollectDependencies |
-				BuildAssetBundleOptions.CompleteAssets |
-					BuildAssetBundleOptions.DeterministicAssetBundle;
-
-			//移动平台需要在最后添加一个参数：android: BuildTarget.Android, ios: BuildTarget.iPhone
-			bool ret = BuildPipeline.BuildAssetBundle(obj, null, targetPath, options, BuildTarget.Android);
-			
-			if (ret)
-			{
-				Debug.Log(obj.name + " export successed! " + targetPath);
-			}
-			else
-			{
-				Debug.Log(obj.name + " export failed");
-			}
-		}
-		
-		AssetDatabase.Refresh();
-		//        ExportDirToXml();
-	}
 
 	[MenuItem("Custom Editor/BuildAssetBundle - Windows")]
 	static void BuildAssetBundle_windows()
@@ -152,15 +91,20 @@ public class MyEditor : Editor
 
 	static Object LoadMainAssetAtPath(string filePath)
 	{
-		int startIndex = filePath.LastIndexOf(".");
-		int length = filePath.Length - startIndex;
-		
-		string ext = filePath.Substring(filePath.LastIndexOf("."), length);
-		if (ext == ".meta")  
+		if (isMetaFile(filePath))
 			return null;
-		
+
 		string newpath = filePath.Replace("\\", "/");
 		return AssetDatabase.LoadMainAssetAtPath(newpath);
+	}
+
+	static bool isMetaFile(string fileName)
+	{
+		int startIndex = fileName.LastIndexOf(".");
+		int length = fileName.Length - startIndex;
+
+		string ext = fileName.Substring(fileName.LastIndexOf("."), length);
+		return ext == ".meta";
 	}
 
 //    [MenuItem("Custom Editor/Create AssetBundle All")]
@@ -305,114 +249,116 @@ public class MyEditor : Editor
 //    //    }
 //    //}
 //
-//    [MenuItem("Custom Editor/Export Dictionary to xml")]
-//    static void ExportDirToXml()
-//    {
-//        string filepath = Application.streamingAssetsPath + "/files.xml";
-//       
-//        if (File.Exists(filepath))
-//        {
-//            XmlDocument oldXml = new XmlDocument();
-//            oldXml.Load(filepath);
-//            loadFileMgr.setData(oldXml);
-//
-//            File.Delete(filepath);
-//        }
-//
-//        XmlDocument xmlDoc = new XmlDocument();
-//        XmlElement root = xmlDoc.CreateElement("fs");
-//
-//        try{
-//            string filePath = Application.streamingAssetsPath;
-//            appendDirectory(filePath, xmlDoc, root);
-//
-//        }finally{
-//        }
-//      
-//        xmlDoc.AppendChild(root);
-//        xmlDoc.Save(filepath);
-//
-//        Debug.Log("Export Successed! " + filepath);
-//    }
-//
-//    private static string dir = "";
-//
-//    private static void appendDirectory( string filePath, XmlDocument xmlDoc, XmlElement root )
-//    {
-//        DirectoryInfo folderInfo = new DirectoryInfo(filePath);
-//        FileSystemInfo[] fileInfos = folderInfo.GetFileSystemInfos();
-//
-//        foreach (FileSystemInfo fileInfo in fileInfos)
-//        {
-//            appendFile(xmlDoc, root, fileInfo);
-//        }
-//
-//        int index = dir.LastIndexOf("/");
-//        dir = index >= 0 ? dir.Substring(0, index) : "";
-//    }
-//
-//    private static void appendFile(XmlDocument xmlDoc, XmlElement root, FileSystemInfo fileInfo)
-//    {
-//        string filePath = fileInfo.FullName;
-//
-//        if (Directory.Exists(filePath))
-//        {
-//			DirectoryInfo folderInfo = new DirectoryInfo(filePath);
-//        	FileSystemInfo[] fileInfos = folderInfo.GetFileSystemInfos();
-//			
-//			if( fileInfos.Length > 0 ) 
-//			{
-//	            XmlElement rootDir = xmlDoc.CreateElement("d");
-//	            rootDir.SetAttribute("n", fileInfo.Name);
-//	            root.AppendChild(rootDir);
-//	
-//	            dir += "/"+ fileInfo.Name;
-//	           	appendDirectory(filePath, xmlDoc, rootDir);
-//			}
-//        }
-//        else
-//        {
-//            XmlElement node = xmlDoc.CreateElement("d");
-//            node.SetAttribute("u", fileInfo.Name);
-//
-//            string md5 = FileUtils.GetMd5Hash(fileInfo.FullName);
-//            int version = getVersion(fileInfo, md5);
-//
-//           // Debug.Log(string.Format("file:{0}, md5:{1}, dir:{2}", fileInfo.Name, md5, dir));
-//
-//            node.SetAttribute("v", version.ToString()); 
-//            node.SetAttribute("md5", md5);
-//
-//            root.AppendChild(node);
-//        }
-//    }
-//
-//    private static int getVersion( FileSystemInfo fileInfo, string md5 )
-//    {
-//        string path = fileInfo.Name;
-//        if ( dir.Length > 0){
-//            int startIdx = 1;
-//            path = dir.Substring( startIdx, dir.Length-startIdx) + "/" + fileInfo.Name;
-//        }
-//
-//        int newV = 0;
-//
-//        ILoadFile file = loadFileMgr.getFile( path );
-//        if( file != null ){
-//            int oldV = file.Version;
-//            string oldMd5 = file.Md5;
-//              
-//            newV = oldV;
-//
-//            bool ret = oldMd5.Equals(md5);
-//            if (!ret ){
-//                newV += 1;
-//            }
-//
-//           // Debug.Log(string.Format("file:{0}, oldV:{1}: newV:{2}", fileInfo.Name, oldV, newV ));
-//        }else{
-//            newV = 1;
-//        }
-//        return newV;
-//    }
+    [MenuItem("Custom Editor/Create assetbundle version file")]
+    static void ExportDirToXml()
+    {
+        string filepath = Application.streamingAssetsPath + "/files.xml";
+       
+        if (File.Exists(filepath))
+        {
+            XmlDocument oldXml = new XmlDocument();
+            oldXml.Load(filepath);
+            loadFileMgr.setData(oldXml);
+
+            File.Delete(filepath);
+        }
+
+        XmlDocument xmlDoc = new XmlDocument();
+        XmlElement root = xmlDoc.CreateElement("fs");
+
+        try{
+            string filePath = Application.streamingAssetsPath;
+            appendDirectory(filePath, xmlDoc, root);
+
+        }finally{
+        }
+      
+        xmlDoc.AppendChild(root);
+        xmlDoc.Save(filepath);
+
+        Debug.Log("Export Successed! " + filepath);
+    }
+
+    private static string dir = "";
+
+    private static void appendDirectory( string filePath, XmlDocument xmlDoc, XmlElement root )
+    {
+        DirectoryInfo folderInfo = new DirectoryInfo(filePath);
+        FileSystemInfo[] fileInfos = folderInfo.GetFileSystemInfos();
+
+        foreach (FileSystemInfo fileInfo in fileInfos)
+        {
+            appendFile(xmlDoc, root, fileInfo);
+        }
+
+        int index = dir.LastIndexOf("/");
+        dir = index >= 0 ? dir.Substring(0, index) : "";
+    }
+
+    private static void appendFile(XmlDocument xmlDoc, XmlElement root, FileSystemInfo fileInfo)
+    {
+        string filePath = fileInfo.FullName;
+
+        if (Directory.Exists(filePath))
+        {
+			DirectoryInfo folderInfo = new DirectoryInfo(filePath);
+        	FileSystemInfo[] fileInfos = folderInfo.GetFileSystemInfos();
+			
+			if( fileInfos.Length > 0 ) 
+			{
+	            XmlElement rootDir = xmlDoc.CreateElement("d");
+	            rootDir.SetAttribute("n", fileInfo.Name);
+	            root.AppendChild(rootDir);
+	
+	            dir += "/"+ fileInfo.Name;
+	           	appendDirectory(filePath, xmlDoc, rootDir);
+			}
+        }
+        else
+        {
+			if(!isMetaFile(fileInfo.FullName)){
+	            XmlElement node = xmlDoc.CreateElement("d");
+	            node.SetAttribute("u", fileInfo.Name);
+
+	            string md5 = FileUtils.GetMd5Hash(fileInfo.FullName);
+	            int version = getVersion(fileInfo, md5);
+
+	           // Debug.Log(string.Format("file:{0}, md5:{1}, dir:{2}", fileInfo.Name, md5, dir));
+
+	            node.SetAttribute("v", version.ToString()); 
+	            node.SetAttribute("md5", md5);
+
+	            root.AppendChild(node);
+			}
+        }
+    }
+
+    private static int getVersion( FileSystemInfo fileInfo, string md5 )
+    {
+        string path = fileInfo.Name;
+        if ( dir.Length > 0){
+            int startIdx = 1;
+            path = dir.Substring( startIdx, dir.Length-startIdx) + "/" + fileInfo.Name;
+        }
+
+        int newV = 0;
+
+        ILoadFile file = loadFileMgr.getFile( path );
+        if( file != null ){
+            int oldV = file.Version;
+            string oldMd5 = file.Md5;
+              
+            newV = oldV;
+
+            bool ret = oldMd5.Equals(md5);
+            if (!ret ){
+                newV += 1;
+            }
+
+           Debug.Log(string.Format("file:{0}, oldV:{1}: newV:{2}", fileInfo.Name, oldV, newV ));
+        }else{
+            newV = 1;
+        }
+        return newV;
+    }
 }
