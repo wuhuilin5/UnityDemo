@@ -39,20 +39,20 @@ public class TestLoadAssetbundle : MonoBehaviour {
 
 	void initShareAssetBundles()
 	{
-		System.Action<int> callback = (count) => {
+		System.Action callback = () => {
 			LoadAssetBundle("UIRoot", loadUIRootComplete);
 		};
 		
 		loadShareAssetBundles(callback);
 	}
 
-	void loadShareAssetBundles( System.Action<int> finishCallback)
+	void loadShareAssetBundles( System.Action finishCallback)
 	{
 		int count = 0;
 		LoadFunishHandler callback = delegate(AssetBundle asset) {
 			count++;
 			if(count==2 && finishCallback != null){
-				finishCallback(count);
+				finishCallback();
 			}
 			asset.LoadAll();
 			//GameObject go = GameObject.Instantiate(loader.assetBundle.mainAsset) as GameObject;
