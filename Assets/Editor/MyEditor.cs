@@ -40,9 +40,13 @@ public class MyEditor : Editor
 	{
 		BuildPipeline.PushAssetDependencies();
 
-		BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas"), true, buildTarget);  // Altas
-		BuildFiles(GetFiles("Assets/Resources/Prefabs"), false, buildTarget);
+		string prefabPatten = "*.prefab";
+
+		BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas/Fanstasy", prefabPatten), true, buildTarget);  // Altas
+		BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas/Wooden", prefabPatten), true, buildTarget);
 	
+		BuildFiles(GetFiles("Assets/Resources/Prefabs/", prefabPatten), false, buildTarget);
+
 		BuildPipeline.PopAssetDependencies();
 
 		BuildFiles(GetFiles("Assets/Resources"), false, buildTarget);
@@ -53,9 +57,9 @@ public class MyEditor : Editor
 		//BuildAssetBundleVersion();
 	}
 
-	static string[] GetFiles(string dirName)
+	static string[] GetFiles(string dirName, string searchPatten = "*")
 	{
-		return Directory.GetFiles(dirName, "*", SearchOption.TopDirectoryOnly);
+		return Directory.GetFiles(dirName, searchPatten, SearchOption.TopDirectoryOnly);
 	}
 
 	static void BuildFiles(string[] files, bool isDependencies, BuildTarget buildTarget )
