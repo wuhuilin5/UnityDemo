@@ -6,6 +6,8 @@ using System.IO;
 using UnityDemo.interfaces;
 using UnityDemo.loadfile;
 using UnityDemo.interfaces.manager;
+using UnityDemo.Utils;
+
 using UnityEngine;
 
 namespace UnityDemo.manager
@@ -34,16 +36,27 @@ namespace UnityDemo.manager
 //            return instance;
 //        }
 
-        private void init()
-        {
-             string filePath = Application.streamingAssetsPath + "/files.xml";
-             if (File.Exists(filePath))
-             {
-                 XmlDocument xmlDoc = new XmlDocument();
-                 xmlDoc.Load( filePath );
-                 setData(xmlDoc);
-             }
+		private void init()
+		{
+
+		}
+
+		public void initversionInfo(string filePath)
+		{
+			if (File.Exists(filePath))
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load( filePath );
+                setData(xmlDoc);
+            }
         }
+
+		public void initVersionInfo(TextAsset data)
+		{
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load (new MemoryStream(data.bytes));
+			setData (xmlDoc);
+		}
 
 		//XmlDocument xmldoc = new XmlDocument();
         //xmldoc.Load(filepath);  

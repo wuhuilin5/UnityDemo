@@ -19,18 +19,17 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	private IAssetManager mAssetMgr;
 
 	void Awake() {
-		Globals.Api.LogLable = mLblLog;
 		mAssetMgr = Globals.Api.AssetManager;
 	}
 
 	void Start () {
-		System.Action<int> callback = (count) => {
-			LoadAssetBundle("UIRoot", loadUIRootComplete);
+		LoadFunishHandler loadComplete = (asset)=>{
+			Globals.Api.loadFileManager.initVersionInfo(asset.mainAsset as TextAsset);
+			asset.Unload(true);
+			initShareAssetBundles();
 		};
 
-		loadShareAssetBundles(callback);
-
-//		mAssetMgr.LoadAsset("http://www.baidu.com/img/bd_logo1.png", LoadTextureComplete);
+		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("files"), loadComplete);
 	}
 	
 	// Update is called once per frame
@@ -38,6 +37,14 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	
 	}
 
+	void initShareAssetBundles()
+	{
+		System.Action<int> callback = (count) => {
+			LoadAssetBundle("UIRoot", loadUIRootComplete);
+		};
+		
+		loadShareAssetBundles(callback);
+	}
 
 	void loadShareAssetBundles( System.Action<int> finishCallback)
 	{
@@ -51,8 +58,8 @@ public class TestLoadAssetbundle : MonoBehaviour {
 			//GameObject go = GameObject.Instantiate(loader.assetBundle.mainAsset) as GameObject;
 		};
 
-		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("Fantasy Atlas"), callback);
-		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("Wooden Atlas"), callback);
+		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("FantasyAtlas"), callback);
+		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("WoodenAtlas"), callback);
 	}
 
 	void loadUIRootComplete(AssetBundle asset)
@@ -67,12 +74,13 @@ public class TestLoadAssetbundle : MonoBehaviour {
 
 	void LoadAssetBundle(string assetbundleName, LoadFunishHandler callback) {
 		string filePath = FileUtils.getAssetBundlePath(assetbundleName);
-		Globals.Api.Log(filePath);
 		mAssetMgr.LoadAsset(filePath, callback);
 	}
 
 	void LoadTextureComplete(AssetBundle asset)
 	{
+		TextAsset data = asset.mainAsset as TextAsset;
+
 //		mTexture.mainTexture = loader.texture;
 //
 //		string filepath = FileUtils.GetAssetPath("logo.jpg");
@@ -95,8 +103,7 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	GameObject AddChildToParent( GameObject parent, Object prefeb )
 	{
 		GameObject go = GameObject.Instantiate(prefeb) as GameObject;
-		Globals.Api.Log("add to parent");
-
+	
 		if (parent != null && go != null) {
 			Transform t = go.transform;
 			t.parent = parent.transform;

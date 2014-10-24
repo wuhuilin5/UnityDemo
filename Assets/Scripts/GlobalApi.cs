@@ -44,21 +44,17 @@ namespace UnityDemo.api
 			
 			return api;
 		}
-		
+
+		public void Destory()
+		{
+			_instance = null;
+			loadFileManager = null;
+			AssetManager = null;
+
+			GameObject.Destroy(this.gameObject);
+		}
+
         public ILoadFileManager loadFileManager { set; get; }
         public IAssetManager AssetManager { set; get; }
-
-		public UILabel LogLable
-		{
-			set {
-				mLog = value;
-			}
-		}
-		
-		public void Log( string msg )
-		{
-			if(mLog)
-				mLog.text = msg;
-		}
     }
 }

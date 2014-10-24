@@ -45,7 +45,12 @@ public class MyEditor : Editor
 	
 		BuildPipeline.PopAssetDependencies();
 
+		BuildFiles(GetFiles("Assets/Resources"), false, buildTarget);
+
 		AssetDatabase.Refresh();
+	
+		//更新版本号
+		//BuildAssetBundleVersion();
 	}
 
 	static string[] GetFiles(string dirName)
@@ -250,33 +255,29 @@ public class MyEditor : Editor
 //    //}
 //
     [MenuItem("Custom Editor/Create assetbundle version file")]
-    static void ExportDirToXml()
+	static void BuildAssetBundleVersion()
     {
-        string filepath = Application.streamingAssetsPath + "/files.xml";
-       
-        if (File.Exists(filepath))
-        {
-            XmlDocument oldXml = new XmlDocument();
-            oldXml.Load(filepath);
-            loadFileMgr.setData(oldXml);
-
-            File.Delete(filepath);
+		string filePath = Application.dataPath + "/Resources/files.xml";
+		if (File.Exists(filePath))
+		{
+			loadFileMgr.initversionInfo(filePath);
+			File.Delete(filePath);
         }
 
         XmlDocument xmlDoc = new XmlDocument();
         XmlElement root = xmlDoc.CreateElement("fs");
 
         try{
-            string filePath = Application.streamingAssetsPath;
-            appendDirectory(filePath, xmlDoc, root);
+            string assetsPath = Application.streamingAssetsPath;
+			appendDirectory(assetsPath, xmlDoc, root);
 
         }finally{
         }
       
         xmlDoc.AppendChild(root);
-        xmlDoc.Save(filepath);
-
-        Debug.Log("Export Successed! " + filepath);
+		xmlDoc.Save(filePath);
+		
+		Debug.Log("Export Successed! " + filePath);
     }
 
     private static string dir = "";

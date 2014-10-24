@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+
+using UnityDemo.Utils;
 using UnityDemo.interfaces.manager;
+
 using UnityEngine;
 
 namespace UnityDemo.manager
@@ -40,7 +43,7 @@ namespace UnityDemo.manager
 		private IEnumerator load(string path, LoadFunishHandler callback )
 		{
 			int version = getVersion(path);
-			//WWW loader = WWW.LoadFromCacheOrDownload( url,version);
+			//WWW loader = WWW.LoadFromCacheOrDownload(path,version);  //android下无法使用
 			WWW loader = new WWW(path);
 			Debug.Log(string.Format("Load Asset url:{0}, version:{1}", path, version));
 
@@ -54,37 +57,40 @@ namespace UnityDemo.manager
 					callback(loader.assetBundle);
 				}
             }
-
-
+		
 			yield return new WaitForSeconds(0.5f);
             loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
 		}
 		
 		private int getVersion(string path)
         {
-            int v = 0; 
-			int index = path.LastIndexOf("?");
-     
-            if( index >= 0 ){
-                int startIndex = index + 1;
-				string str = path.Substring(startIndex, path.Length-startIndex);
-       
-                if (str.Length >= 0)
-                {
-                    string[] paramlist = str.Split('&');
-                    foreach (string item in paramlist)
-                    {
-                        string[] list = item.Split('=');
-                        if (list.Length == 2 && list[0] == "v")
-                        {
-                            v = int.Parse(list[1]);
-                            break;
-                        }
-                    }
-                }
-            }
+           int v = 0; 
+//			int index = path.LastIndexOf("?");
+//     
+//            if( index >= 0 ){
+//                int startIndex = index + 1;
+//				string str = path.Substring(startIndex, path.Length-startIndex);
+//       
+//                if (str.Length >= 0)
+//                {
+//                    string[] paramlist = str.Split('&');
+//                    foreach (string item in paramlist)
+//                    {
+//                        string[] list = item.Split('=');
+//                        if (list.Length == 2 && list[0] == "v")
+//                        {
+//                            v = int.Parse(list[1]);
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//
+			string newPath = path.Replace(FileUtils.StreamingAssetPath, "");
+			v = Globals.Api.loadFileManager.getVersion(newPath);
 
             return v;
+		
         }
     }
 }

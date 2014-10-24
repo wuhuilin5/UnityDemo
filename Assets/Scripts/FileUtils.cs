@@ -14,7 +14,7 @@ namespace UnityDemo.Utils
 	{
         public static string AssetRootPath = Path.Combine(Application.dataPath, "/");
 
-        private static string StreamingAssetRootPath =
+        public static string StreamingAssetPath =
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
   "file:///" + Application.streamingAssetsPath + "/";   
 #elif UNITY_IPHONE
@@ -24,7 +24,7 @@ namespace UnityDemo.Utils
 #else
 	string.Empty;
 #endif
-//        private static System.Func<string, int> _getVersion = Globals.Api.loadFileManager.getVersion;
+        private static System.Func<string, int> _getVersion = Globals.Api.loadFileManager.getVersion;
 
         public FileUtils ()
         {
@@ -36,7 +36,7 @@ namespace UnityDemo.Utils
             
             //tempPath += "?v=" + _getVersion(tempPath);
 
-            return StreamingAssetRootPath + tempPath;
+            return StreamingAssetPath + tempPath;
         }
 
         public static string getXmlPath( string name )
@@ -44,12 +44,12 @@ namespace UnityDemo.Utils
             string tempPath = name + ".xml";
 			//tempPath += "?v=" + _getVersion(tempPath);
 			
-            return StreamingAssetRootPath + tempPath;
+            return StreamingAssetPath + tempPath;
         }
 
 		public static string GetAssetPath(string name)
 		{
-			return StreamingAssetRootPath + name;
+			return StreamingAssetPath + name;
 		}
 
 

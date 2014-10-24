@@ -1,0 +1,13 @@
+<fs>
+  <d n="Assetbundle">
+    <d n="a">
+      <d u="d.txt" v="1" md5="D41D8CD98F00B204E9800998ECF8427E" />
+    </d>
+    <d u="FantasyAtlas.unity3d" v="1" md5="84601D6C5526EC08DF3F2E0653E6E89B" />
+    <d u="files.unity3d" v="1" md5="9E9AD82BE2A7BE2BB64FD591E48AB683" />
+    <d u="ItemContainer.unity3d" v="1" md5="6BD9898A9177E343DECFC70A841B6491" />
+    <d u="UIRoot.unity3d" v="1" md5="86AF80E57A4B1472EE1B7BD83C9DA90F" />
+    <d u="WoodenAtlas.unity3d" v="1" md5="44FEC01A2179CE40EFEA9BF4BEC44613" />
+  </d>
+  <d u="UnityDemo.xml" v="1" md5="36FD095536B22982C9C886D581E724E5" />
+</fs>
