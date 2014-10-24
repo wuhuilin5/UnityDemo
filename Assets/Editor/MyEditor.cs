@@ -21,38 +21,47 @@ public class MyEditor : Editor
 	[MenuItem("Custom Editor/BuildAssetBundle - Windows")]
 	static void BuildAssetBundle_windows()
 	{
-		BuildAllPrefabToAssetBundles(BuildTarget.StandaloneWindows);
+		BuildPrefabsToAssetBundles(BuildTarget.StandaloneWindows);
 	}
 
 	[MenuItem("Custom Editor/BuildAssetBundle - Android")]
 	static void BuildAssetBundle_Android()
 	{
-		BuildAllPrefabToAssetBundles(BuildTarget.Android);
+		BuildPrefabsToAssetBundles(BuildTarget.Android);
 	}
 
 	[MenuItem("Custom Editor/BuildAssetBundle - iPhone")]
 	static void BuildAssetBundle_iPhone()
 	{
-		BuildAllPrefabToAssetBundles(BuildTarget.iPhone);
+		BuildPrefabsToAssetBundles(BuildTarget.iPhone);
 	}
 	
-	static void BuildAllPrefabToAssetBundles(BuildTarget buildTarget)
+	static void BuildPrefabsToAssetBundles(BuildTarget buildTarget)
 	{
-		BuildPipeline.PushAssetDependencies();
+		Object[] SelectedAssets = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+		if (SelectedAssets.Length > 0 ){
+			BuildPipeline.PushAssetDependencies();
+			foreach(Object obj in SelectedAssets ){
+				string targetPath = AssetBundleDir + obj.name + AssetBundleExt;
+				BuildAssetBundler(obj, null, targetPath, buildTarget);
+			}
+			BuildPipeline.PopAssetDependencies();
+		}else{
+			BuildPipeline.PushAssetDependencies();
 
-		string prefabPatten = "*.prefab";
+			string prefabPatten = "*.prefab";
 
-		BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas/Fanstasy", prefabPatten), true, buildTarget);  // Altas
-		BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas/Wooden", prefabPatten), true, buildTarget);
-	
-		BuildFiles(GetFiles("Assets/Resources/Prefabs/", prefabPatten), false, buildTarget);
+			BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas/Fanstasy", prefabPatten), true, buildTarget);  // Altas
+			BuildFiles(GetFiles("Assets/Resources/Prefabs/Atlas/Wooden", prefabPatten), true, buildTarget);
+		
+			BuildFiles(GetFiles("Assets/Resources/Prefabs/", prefabPatten), false, buildTarget);
 
-		BuildPipeline.PopAssetDependencies();
+			BuildPipeline.PopAssetDependencies();
 
-		BuildFiles(GetFiles("Assets/Resources"), false, buildTarget);
-
+			BuildFiles(GetFiles("Assets/Resources"), false, buildTarget);
+		}
 		AssetDatabase.Refresh();
-	
+		
 		//更新版本号
 		//BuildAssetBundleVersion();
 	}
