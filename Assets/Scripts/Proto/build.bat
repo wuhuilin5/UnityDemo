@@ -1,0 +1,1 @@
+csc /out:U3DClientData.dll /r:../../Plugin/LitJson.dll;../../Plugin/UnityEngine.dll /t:library *.cs
