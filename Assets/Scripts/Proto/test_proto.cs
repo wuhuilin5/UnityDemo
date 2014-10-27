@@ -32,6 +32,45 @@ namespace Proto
 			}
 		}
 
+		public test_proto_item Last()
+		{
+			if(_table.Count != 0 )
+			{
+				return this._table[_table.Count-1];
+			}
+			return null;
+		}
+
+		public test_proto_item First()
+		{
+			if(_table.Count != 0 )
+			{
+				return this._table[0];
+			}
+
+			return null;
+		}
+
+		public test_proto_item Find(string key)
+		{
+			if( key == null || key == string.Empty)
+			{
+				return null;
+			}
+
+			ToDictionary();
+			if(!table.ContainsKey(key))
+			{
+				return null;
+			}
+			return table[key];
+		}
+	
+		public string getTxtName()
+		{
+			return "test_proto.txt";
+		}
+
 		public bool LoadFromJson(string jsonObject)
 		{
 			JsonData jsonData = JsonMapper.ToObject(jsonObject);
@@ -58,15 +97,13 @@ namespace Proto
 
 		public void ToDictionary()
 		{
-			if(_table.Count == table.Count)
+			if(_table.Count != table.Count)
 			{
-				return;
-			}
-
-			this.table.Clear();
-			foreach(test_proto_item item in _table)
-			{
-				this.table[item.id] = item;
+				this.table.Clear();
+				foreach(test_proto_item item in _table)
+				{
+					this.table[item.id] = item;
+				}
 			}
 		}
 	}
