@@ -6,6 +6,7 @@ using UnityDemo;
 using UnityDemo.Utils;
 using UnityDemo.manager;
 using UnityDemo.interfaces.manager;
+using Proto;
 
 public class TestLoadAssetbundle : MonoBehaviour {
 
@@ -30,6 +31,10 @@ public class TestLoadAssetbundle : MonoBehaviour {
 		};
 
 		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("files"), loadComplete);
+
+		TextAsset txtAsset = Resources.Load("Data/test_proto") as TextAsset;
+		test_proto proto = new test_proto();
+		proto.LoadFromJson(txtAsset.text);
 	}
 	
 	// Update is called once per frame

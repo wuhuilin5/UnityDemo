@@ -111,7 +111,7 @@ public class MyEditor : Editor
 	{
 		if (isMetaFile(filePath))
 			return null;
-
+	
 		string newpath = filePath.Replace("\\", "/");
 		return AssetDatabase.LoadMainAssetAtPath(newpath);
 	}
