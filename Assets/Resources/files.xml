@@ -3,11 +3,30 @@
     <d n="a">
       <d u="d.txt" v="1" md5="D41D8CD98F00B204E9800998ECF8427E" />
     </d>
-    <d u="FantasyAtlas.unity3d" v="3" md5="A200731F3C300C9472184856FA55A62C" />
-    <d u="files.unity3d" v="3" md5="AE78BFF583D67420191CA0A736F3D371" />
-    <d u="ItemContainer.unity3d" v="3" md5="8EA3DFF2F1F39CEFD5AFA590CCE1B396" />
-    <d u="UIRoot.unity3d" v="3" md5="495C2A8420978A6D4251D00ABCA9B302" />
-    <d u="WoodenAtlas.unity3d" v="3" md5="3AE7DBF590BA5A68E497BE3CF7EAC002" />
+    <d u="FantasyAtlas.unity3d" v="4" md5="A029835612D60C91E6580D81A3A7B397" />
+    <d u="files.unity3d" v="5" md5="2B3F991D5ECE516C51958070B14E1924" />
+    <d u="ItemContainer.unity3d" v="4" md5="B0ADCE037F89C7CBC8C829CDA809E1D9" />
+    <d u="UIRoot.unity3d" v="4" md5="655FB1C35730BB87F5FAC75890E16098" />
+    <d u="version.unity3d" v="1" md5="4E31991A291C2EA32F035FB6F9CC5F71" />
+    <d u="WoodenAtlas.unity3d" v="4" md5="F7F5177CED1BB0E86D553B65F5E8B750" />
+  </d>
+  <d n="Assets">
+    <d n="Resources">
+      <d u="files.xml" v="1" md5="D3F5CFA0E86AFFBE83AC3E22CE904E51" />
+      <d u="version.txt" v="1" md5="4E31991A291C2EA32F035FB6F9CC5F71" />
+    </d>
+  </d>
+  <d n="Prefabs">
+    <d n="Atlas">
+      <d n="Fanstasy">
+        <d u="FantasyAtlas.prefab" v="1" md5="A029835612D60C91E6580D81A3A7B397" />
+      </d>
+      <d n="Wooden">
+        <d u="WoodenAtlas.prefab" v="1" md5="F7F5177CED1BB0E86D553B65F5E8B750" />
+      </d>
+    </d>
+    <d u="ItemContainer.prefab" v="1" md5="B0ADCE037F89C7CBC8C829CDA809E1D9" />
+    <d u="UIRoot.prefab" v="1" md5="655FB1C35730BB87F5FAC75890E16098" />
   </d>
   <d u="UnityDemo.xml" v="1" md5="36FD095536B22982C9C886D581E724E5" />
 </fs>

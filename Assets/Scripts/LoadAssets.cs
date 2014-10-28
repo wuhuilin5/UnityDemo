@@ -38,26 +38,26 @@ public class LoadAssets : MonoBehaviour
             string filename = item.Key;
 
             string url = FileUtils.getAssetBundlePath(filename);
-            assetMgr.LoadAsset(url, onLoadComplete);
+           // assetMgr.LoadAsset(url, onLoadComplete);
         }
     }
 
-    private void onLoadComplete(AssetBundle asset)
-    {
-        GameObject obj;
-        string[] list = AssetMap[asset.name];
-        if (list == null || list.Length == 0)
-        {
-            obj = (GameObject)Instantiate(asset.mainAsset);
-            obj.SetActive(true);
-        }
-        else
-        {
-            foreach (string name in list)
-            {
-                obj = (GameObject)Instantiate(asset.Load(name));
-                obj.SetActive(true);
-            }
-        }
-    }
+//    private void onLoadComplete(Object asset)
+//    {
+//        GameObject obj;
+//        string[] list = AssetMap[asset.name];
+//        if (list == null || list.Length == 0)
+//        {
+//            obj = (GameObject)Instantiate(asset.mainAsset);
+//            obj.SetActive(true);
+//        }
+//        else
+//        {
+//            foreach (string name in list)
+//            {
+//                obj = (GameObject)Instantiate(asset.Load(name));
+//                obj.SetActive(true);
+//            }
+//        }
+//    }
 }

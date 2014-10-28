@@ -203,8 +203,6 @@
      <Compile Include="Assets\Scripts\LoadAssets.cs" />
      <Compile Include="Assets\Scripts\LoadFile.cs" />
      <Compile Include="Assets\Scripts\LoadFileManager.cs" />
-     <Compile Include="Assets\Scripts\LoadScene.cs" />
-     <Compile Include="Assets\Scripts\LoadXmlScene.cs" />
      <Compile Include="Assets\Scripts\Proto\IProto.cs" />
      <Compile Include="Assets\Scripts\Proto\IntegerList.cs" />
      <Compile Include="Assets\Scripts\Proto\JsonFiledHelper.cs" />

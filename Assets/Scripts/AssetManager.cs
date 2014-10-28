@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace UnityDemo.manager
 {
-    public delegate void LoadFunishHandler( AssetBundle asset );
+    public delegate void LoadFunishHandler( UnityEngine.Object asset );
 
     public class AssetManager : MonoBehaviour, IAssetManager
     {
@@ -43,8 +43,8 @@ namespace UnityDemo.manager
 		private IEnumerator load(string path, LoadFunishHandler callback )
 		{
 			int version = getVersion(path);
-			//WWW loader = WWW.LoadFromCacheOrDownload(path,version);  //android下无法使用
-			WWW loader = new WWW(path);
+			WWW loader = WWW.LoadFromCacheOrDownload(path,1001);  //android下无法使用
+			//WWW loader = new WWW(path);
 			Debug.Log(string.Format("Load Asset url:{0}, version:{1}", path, version));
 
             yield return loader;
@@ -53,12 +53,13 @@ namespace UnityDemo.manager
                 Debug.Log(String.Format("Load Error:{0}", loader.error));
             }
             else {
+				AssetBundle asset = loader.assetBundle;
 				if( callback != null){
-					callback(loader.assetBundle);
+					callback(asset.mainAsset);
 				}
             }
 		
-			//yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.5f);
             loader.assetBundle.Unload(false);  
 		}
 		

@@ -21,20 +21,30 @@ public class TestLoadAssetbundle : MonoBehaviour {
 
 	void Awake() {
 		mAssetMgr = Globals.Api.AssetManager;
+
+//		for(int i = 0; i < 2000; i++ )
+//		{
+//			if(Caching.IsVersionCached(FileUtils.getAssetBundlePath("UIRoot"), i ))
+//			{
+//				Debug.Log("Cache Version:" + i);
+//			}
+//		}
 	}
 
 	void Start () {
+		//return;
+
 		LoadFunishHandler loadComplete = (asset)=>{
-			Globals.Api.loadFileManager.initVersionInfo(asset.mainAsset as TextAsset);
-			asset.Unload(true);
+			Globals.Api.loadFileManager.initVersionInfo(asset as TextAsset);
+			//asset.Unload(true);
 			initShareAssetBundles();
 		};
 
 		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("files"), loadComplete);
 
-		TextAsset txtAsset = Resources.Load("Data/test_proto") as TextAsset;
-		test_proto proto = ScriptableObject.CreateInstance<test_proto>();
-		proto.LoadFromJson(txtAsset.text);
+//		TextAsset txtAsset = Resources.Load("Data/test_proto") as TextAsset;
+//		test_proto proto = ScriptableObject.CreateInstance<test_proto>();
+//		proto.LoadFromJson(txtAsset.text);
 	}
 	
 	// Update is called once per frame
@@ -54,22 +64,22 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	void loadShareAssetBundles( System.Action finishCallback)
 	{
 		int count = 0;
-		LoadFunishHandler callback = delegate(AssetBundle asset) {
+		LoadFunishHandler callback = delegate(Object asset) {
 			count++;
 			if(count==2 && finishCallback != null){
 				finishCallback();
 			}
-			asset.LoadAll();
-			//GameObject go = GameObject.Instantiate(loader.assetBundle.mainAsset) as GameObject;
+			//asset.LoadAll();
+			//GameObject go = GameObject.Instantiate(loader.Object.) as GameObject;
 		};
 
 		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("FantasyAtlas"), callback);
 		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("WoodenAtlas"), callback);
 	}
 
-	void loadUIRootComplete(AssetBundle asset)
+	void loadUIRootComplete(Object prefeb)
 	{
-		Object prefeb = asset.Load("UIRoot", typeof(GameObject));
+		//Object prefeb = asset.Load("UIRoot", typeof(GameObject));
 		GameObject go = GameObject.Instantiate(prefeb) as GameObject;
 		mAnchorLeft = GameObject.Find("Anchor-left");
 		mAnchorRight = GameObject.Find("Anchor-right");
@@ -82,20 +92,20 @@ public class TestLoadAssetbundle : MonoBehaviour {
 		mAssetMgr.LoadAsset(filePath, callback);
 	}
 
-	void LoadTextureComplete(AssetBundle asset)
+	void LoadTextureComplete(Object asset)
 	{
-		TextAsset data = asset.mainAsset as TextAsset;
+		TextAsset data = asset as TextAsset;
 
 //		mTexture.mainTexture = loader.texture;
 //
 //		string filepath = FileUtils.GetAssetPath("logo.jpg");
 //		if(!File.Exists(filepath))
 //			FileUtils.SaveFile("logo.jpg", loader.bytes);
-//		GameObject obj = loader.assetBundle.mainAsset as GameObject;
+//		GameObject obj = loader.Object. as GameObject;
 	}
 
-	void LoadItemContainerComplete(AssetBundle asset) {
-		Object prefeb = asset.Load("ItemContainer", typeof(GameObject));
+	void LoadItemContainerComplete(Object prefeb) {
+		//Object prefeb = asset.Load("ItemContainer", typeof(GameObject));
 
 		//GameObject obj = NGUITools.AddChild(this.gameObject, prefeb);
 		GameObject leftContainer = AddChildToParent(mAnchorLeft, prefeb);
