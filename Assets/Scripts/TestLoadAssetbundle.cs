@@ -33,7 +33,7 @@ public class TestLoadAssetbundle : MonoBehaviour {
 		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("files"), loadComplete);
 
 		TextAsset txtAsset = Resources.Load("Data/test_proto") as TextAsset;
-		IProto proto = new test_proto();
+		test_proto proto = ScriptableObject.CreateInstance<test_proto>();
 		proto.LoadFromJson(txtAsset.text);
 	}
 	

@@ -113,6 +113,7 @@ public class MyEditor : Editor
 			return null;
 	
 		string newpath = filePath.Replace("\\", "/");
+
 		return AssetDatabase.LoadMainAssetAtPath(newpath);
 	}
 

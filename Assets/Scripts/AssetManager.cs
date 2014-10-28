@@ -58,8 +58,8 @@ namespace UnityDemo.manager
 				}
             }
 		
-			yield return new WaitForSeconds(0.5f);
-            loader.assetBundle.Unload(false);  //TIPS：可能会导致资源渲染问题,等待0.5至1秒后再unload,
+			//yield return new WaitForSeconds(0.5f);
+            loader.assetBundle.Unload(false);  
 		}
 		
 		private int getVersion(string path)
