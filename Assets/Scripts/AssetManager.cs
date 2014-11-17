@@ -43,7 +43,7 @@ namespace UnityDemo.manager
 		private IEnumerator load(string path, LoadFunishHandler callback )
 		{
 			int version = getVersion(path);
-			WWW loader = WWW.LoadFromCacheOrDownload(path,1001);  //android下无法使用
+			WWW loader = WWW.LoadFromCacheOrDownload(path,1006);  //android下无法使用
 			//WWW loader = new WWW(path);
 			Debug.Log(string.Format("Load Asset url:{0}, version:{1}", path, version));
 
@@ -58,8 +58,8 @@ namespace UnityDemo.manager
 					callback(asset.mainAsset);
 				}
             }
-		
-			yield return new WaitForSeconds(0.5f);
+
+			//yield return new WaitForSeconds(0.5f);
             loader.assetBundle.Unload(false);  
 		}
 		

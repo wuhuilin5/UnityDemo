@@ -63,6 +63,8 @@ namespace UnityDemo.manager
 		public void setData( XmlDocument xmlDoc )
 		{
             fileMap.Clear();
+			XmlNode root = xmlDoc.SelectSingleNode("fs");
+			string v = (root as XmlElement).GetAttribute("v");
 
 			XmlNodeList nodelist = xmlDoc.SelectSingleNode("fs").ChildNodes; 
 			foreach( XmlElement node in nodelist )
@@ -141,5 +143,23 @@ namespace UnityDemo.manager
 
             return "0";
         }
+
+		private void parseElement(XmlNode xmlNode, string fileName)
+		{
+			XmlElement element = xmlNode as XmlElement;
+			while (element != null)
+			{
+				if (element.HasAttribute("u"))
+				{
+					parseElement(element, string.Concat(fileName, element.GetAttribute("u"), "/"));
+				}else
+				{
+					string name = string.Concat(fileName, element.GetAttribute("u"));
+					int version = int.Parse(element.GetAttribute("v"));
+					int size = int.Parse(element.GetAttribute("s"));
+				 }
+				element = element.NextSibling as XmlElement;
+			}
+		}
 	}
 }

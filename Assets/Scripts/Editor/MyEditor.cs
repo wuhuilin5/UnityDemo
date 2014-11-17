@@ -33,9 +33,23 @@ public class MyEditor : Editor
 	[MenuItem("Custom Editor/BuildAssetBundle - iPhone")]
 	static void BuildAssetBundle_iPhone()
 	{
-		BuildPrefabsToAssetBundles(BuildTarget.iPhone);
+		//BuildPrefabsToAssetBundles(BuildTarget.iPhone);
+		GetSubDir("Assets/Resources/");
 	}
-	
+
+	private static void GetSubDir(string path)
+	{
+		string[] sDir = Directory.GetDirectories(path);
+		string[] sFile = Directory.GetFiles(path);
+
+		foreach( var file in sFile)
+		{
+			Debug.Log(string.Format("name:{0}, path:{1}", file));
+		}
+		foreach( var dir in sDir)
+			GetSubDir(dir);
+
+	}
 	static void BuildPrefabsToAssetBundles(BuildTarget buildTarget)
 	{
 		Object[] SelectedAssets = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);

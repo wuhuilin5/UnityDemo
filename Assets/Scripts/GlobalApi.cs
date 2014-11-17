@@ -13,7 +13,6 @@ namespace UnityDemo.api
     public class GlobalApi: MonoBehaviour, IGlobalApi
     {
 		private static IGlobalApi _instance;
-		private UILabel mLog;
 
 		public static IGlobalApi getInstance()
 		{

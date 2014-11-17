@@ -10,18 +10,21 @@ using Proto;
 
 public class TestLoadAssetbundle : MonoBehaviour {
 
-	public UILabel mLblLog;
 	GameObject mAnchorLeft;
 	GameObject mAnchorRight;
 
-	public UITexture mTexture;
-
+	private string txt = "none";
+	private string content = "";
+	private string str = "";
 	// Use this for initialization
 	private IAssetManager mAssetMgr;
 
+	private AndroidJavaObject activity;
+	private int res = 0;
+	private long memSize = 0;
+
 	void Awake() {
 		mAssetMgr = Globals.Api.AssetManager;
-
 //		for(int i = 0; i < 2000; i++ )
 //		{
 //			if(Caching.IsVersionCached(FileUtils.getAssetBundlePath("UIRoot"), i ))
@@ -32,22 +35,57 @@ public class TestLoadAssetbundle : MonoBehaviour {
 	}
 
 	void Start () {
-		//return;
+		if (Application.platform == RuntimePlatform.Android)
+		{
+            //AndroidJavaClass js = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            //activity = js.GetStatic<AndroidJavaObject>("currentActivity");
+            //res = activity.Call<int>("Max", new object[]{10,20});
+            //memSize = activity.CallStatic<long>("getSDFreeSize");
+            memSize = FileUtils.FreeSpece("/mnt/sdcard/");
+		}
 
-		LoadFunishHandler loadComplete = (asset)=>{
-			Globals.Api.loadFileManager.initVersionInfo(asset as TextAsset);
-			//asset.Unload(true);
-			initShareAssetBundles();
-		};
+        string[] driveNames = Directory.GetLogicalDrives();
+        foreach (var name in driveNames)
+        {
+            var DriveInfo = new DriveInfo(name);
+            Debug.Log("drive name:" + name);
+        }
+	}
 
-		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("files"), loadComplete);
+	IEnumerator load(string filePath)
+	{
+		WWW www = new WWW("file:///" + filePath);
+		yield return www;
+
+		content = www.text;
+	}
+
+//		LoadFunishHandler loadComplete = (asset)=>{
+//			Globals.Api.loadFileManager.initVersionInfo(asset as TextAsset);
+//			//asset.Unload(true);
+//			initShareAssetBundles();
+//		};
+//
+//		mAssetMgr.LoadAsset(FileUtils.getAssetBundlePath("files"), loadComplete);
 
 //		TextAsset txtAsset = Resources.Load("Data/test_proto") as TextAsset;
 //		test_proto proto = ScriptableObject.CreateInstance<test_proto>();
 //		proto.LoadFromJson(txtAsset.text);
+
+//	}
+	void OnGUI()
+	{
+		GUI.Label( new Rect( 0, 0, 200, 50), "max:" + res);
+		GUI.Label( new Rect(0, 20, 200, 100), "mem-size:" + memSize);
+	
+		if (GUI.Button( new Rect(0, 80, 100, 50), "Click Shake"))
+		{
+			if (activity != null)
+				activity.Call("Shake");
+		}
 	}
 	
-	// Update is called once per frame
+		// Update is called once per frame
 	void Update () {
 	
 	}
