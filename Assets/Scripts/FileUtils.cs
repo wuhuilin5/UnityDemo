@@ -24,7 +24,7 @@ namespace UnityDemo.Utils
 #else
 	Application.streamingAssetsPath + "/"; 
 #endif
-        private static System.Func<string, int> _getVersion = Globals.Api.loadFileManager.getVersion;
+        //private static System.Func<string, int> _getVersion = Globals.Api.loadFileManager.getVersion;
 
         public FileUtils ()
         {
