@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using UnityDemo.interfaces.manager;
-using UnityDemo.manager;
+using UnityDemo.Manager;
 using UnityDemo.Utils;
 using UnityEngine;
 
@@ -12,12 +11,10 @@ public class LoadAssets : MonoBehaviour
 {
     public static Dictionary<string, string[]> AssetMap;
 
-    private IAssetManager assetMgr;
-
     void Start()
     {
-        assetMgr = Globals.Api.AssetManager;
- 
+        //assetMgr = Globals.Api.AssetManager;
+
         initAssetMap();
         loadAssets();
     }

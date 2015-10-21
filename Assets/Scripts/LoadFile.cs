@@ -1,9 +1,9 @@
 using System;
-using UnityDemo.interfaces;
+
 
 namespace UnityDemo.loadfile
 {
-	public class LoadFile: ILoadFile
+	public class LoadFile
 	{
 		private string path;
 		private int version;

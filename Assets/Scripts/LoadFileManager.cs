@@ -3,44 +3,18 @@ using System.Xml;
 using System.Collections.Generic;
 using System.IO;
 
-using UnityDemo.interfaces;
 using UnityDemo.loadfile;
-using UnityDemo.interfaces.manager;
 using UnityDemo.Utils;
 
 using UnityEngine;
 
-namespace UnityDemo.manager
+namespace UnityDemo.Manager
 {
-    public class LoadFileManager: MonoBehaviour, ILoadFileManager
+    public class LoadFileManager : Singleton<LoadFileManager>
 	{
-        private static ILoadFileManager instance;
-
-		private Dictionary<string, ILoadFile> fileMap = new Dictionary<string, ILoadFile>();
+        private Dictionary<string, LoadFile> fileMap = new Dictionary<string, LoadFile>();
 		private string dir = "";
 		
-		void Awake(){
-			init();
-		}
-		
-//        private LoadFileManager() 
-//        {
-//            init();
-//        }
-
-//        public static ILoadFileManager getIntance()
-//        {
-//            if (instance == null)
-//                instance = new LoadFileManager();
-//
-//            return instance;
-//        }
-
-		private void init()
-		{
-
-		}
-
 		public void initversionInfo(string filePath)
 		{
 			if (File.Exists(filePath))
@@ -81,7 +55,7 @@ namespace UnityDemo.manager
 				}
 			}
 
-            //foreach (KeyValuePair<string, ILoadFile> keyValue in fileMap)
+            //foreach (KeyValuePair<string, LoadFile> keyValue in fileMap)
             //{
             //    string msg = string.Format("n:{0},v:{1}\n", keyValue.Value.Path, keyValue.Value.Version);
             //    Debug.Log(msg);
@@ -115,11 +89,11 @@ namespace UnityDemo.manager
             int version = int.Parse(node.GetAttribute("v"));
             string md5 = node.GetAttribute("md5");
 
-            ILoadFile file = new LoadFile(path, version, md5);
-            fileMap.Add(file.Path, file);
+            LoadFile file = new LoadFile(path, version, md5);
+            fileMap.Add(file.path, file);
         }
 
-		public ILoadFile getFile( string path )
+		public LoadFile getFile( string path )
 		{
 			if( fileMap.ContainsKey( path ))
 				return fileMap[path];
@@ -128,18 +102,18 @@ namespace UnityDemo.manager
 		
 		public int getVersion( string path )
 		{
-			ILoadFile file = getFile( path );
+			LoadFile file = getFile( path );
 			if( file != null )
-				return file.Version;
+				return file.version;
 			
 			return 0;
 		}
 
         public string getMd5(string path)
         {
-            ILoadFile file = getFile(path);
+            LoadFile file = getFile(path);
             if (file != null)
-                return file.Md5;
+                return file.md5;
 
             return "0";
         }

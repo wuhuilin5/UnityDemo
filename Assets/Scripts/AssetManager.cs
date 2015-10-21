@@ -2,15 +2,15 @@
 using System.Collections;
 
 using UnityDemo.Utils;
-using UnityDemo.interfaces.manager;
+using UnityDemo.Interfaces;
 
 using UnityEngine;
 
-namespace UnityDemo.manager
+namespace UnityDemo.Manager
 {
     public delegate void LoadFunishHandler( UnityEngine.Object asset );
 
-    public class AssetManager : MonoBehaviour, IAssetManager
+    public class AssetManager : Singleton<AssetManager>, IAssetManager
     {
         private static IAssetManager instance;
   		
@@ -28,7 +28,7 @@ namespace UnityDemo.manager
 //        }
 
 
-        public void LoadAsset(string path, LoadFunishHandler callback = null )
+        public void LoadAsset(string path, OnLoadFinished callback)
         {
 //			System.Action<AssetBundle> handler = (asset) => {
 //				if( callback != null ){
@@ -37,7 +37,7 @@ namespace UnityDemo.manager
 //				}	
 //			};
 			
-			StartCoroutine(load(path, callback));
+			//StartCoroutine(load(path, callback));
         }
 		
 		private IEnumerator load(string path, LoadFunishHandler callback )
@@ -88,7 +88,7 @@ namespace UnityDemo.manager
 //            }
 //
 			string newPath = path.Replace(FileUtils.StreamingAssetPath, "");
-			v = Globals.Api.loadFileManager.getVersion(newPath);
+			v = LoadFileManager.Instance.getVersion(newPath);
 
             return v;
 		

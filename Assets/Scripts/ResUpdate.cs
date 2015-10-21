@@ -87,9 +87,9 @@ namespace UnityDemo
 			WWW asset = new WWW(LOCAL_RES_URL + "cube.assetbundle" );
 			yield return asset;
 			
-			AssetBundle bundel = asset.assetBundle;
-			Instantiate( bundel.Load( "cube" ));
-			bundel.Unload(false);
+			AssetBundle bundle = asset.assetBundle;
+            Instantiate(bundle.LoadAsset("cube"));
+            bundle.Unload(false);
 		}
 		
 		private void UpdateLocalVersionFile()
