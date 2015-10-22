@@ -13,29 +13,38 @@ namespace UnityEditor
     public class BundleExporter
     {
         private static readonly string mBundlePath = "Assets/";
-        
-        private static readonly string mExportPath = Application.streamingAssetsPath;
-        private static readonly BuildAssetBundleOptions mOptions =
-            BuildAssetBundleOptions.CollectDependencies |
-            BuildAssetBundleOptions.CompleteAssets |
-            BuildAssetBundleOptions.DeterministicAssetBundle;
-      
-        private static readonly BuildAssetBundleOptions mDataAssetOptions =
-            BuildAssetBundleOptions.CollectDependencies |
-            BuildAssetBundleOptions.CompleteAssets |
-            BuildAssetBundleOptions.UncompressedAssetBundle |
-            BuildAssetBundleOptions.DeterministicAssetBundle;
+
+        private static readonly string mExportPath = Application.streamingAssetsPath + "/assetbundles";
+        private static readonly BuildAssetBundleOptions mOptions = BuildAssetBundleOptions.DeterministicAssetBundle;
+    
+        private static readonly BuildAssetBundleOptions mDataAssetOptions = BuildAssetBundleOptions.DeterministicAssetBundle;
 
         private static BuildTarget mCurrentTarget;
 
-        [MenuItem("BunldeExporter/ExportBundles_Android")]
+        [MenuItem("BundleExporter/ExportBundles_Android")]
         public static void ExportBundles_Android()
         {
             mCurrentTarget = BuildTarget.Android;
             ExportSelectedBundles();
-            UnityEngine.Debug.Log("ExportBundles_Android ok.");
+
+            DateTime datetime = new DateTime(DateTime.Now.Ticks);
+            UnityEngine.Debug.Log("ExportBundles_Android ok." + datetime.ToString());
         }
 
+
+        [MenuItem("BundleExporter/CreateAssetBundle_Android")]
+        public static void CreateAssetBundle()
+        {
+            mCurrentTarget = BuildTarget.Android;
+            if (!Directory.Exists(mExportPath))
+            {
+                Directory.CreateDirectory(mExportPath);
+            }
+            BuildPipeline.BuildAssetBundles(mExportPath, mOptions, mCurrentTarget);
+
+            DateTime datetime = new DateTime(DateTime.Now.Ticks);
+            UnityEngine.Debug.Log("CreateAssetBundle ok." + datetime.ToString());
+        }
 
         /// <summary>
         /// 导出选中的Bundles
