@@ -27,7 +27,7 @@ namespace UnityDemo.Manager
 //            return instance;
 //        }
 
-
+            
         public void LoadAsset(string path, OnLoadFinished callback)
         {
 //			System.Action<AssetBundle> handler = (asset) => {

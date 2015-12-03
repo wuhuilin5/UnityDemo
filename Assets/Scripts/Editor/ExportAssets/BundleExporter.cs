@@ -44,6 +44,31 @@ namespace UnityEditor
 
             DateTime datetime = new DateTime(DateTime.Now.Ticks);
             UnityEngine.Debug.Log("CreateAssetBundle ok." + datetime.ToString());
+
+        }
+
+        [MenuItem("BundleExporter/GetDependencies")]
+        public static void GetDependencies()
+        {
+            var selection = Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.DeepAssets);
+            var files = (from file in selection
+                         let path = AssetDatabase.GetAssetPath(file)
+                         where File.Exists(path)
+                         select path).ToArray();
+
+            var dependencies = GetDependencies(files[0]).ToList<string>();
+            for(int i = 0, count = dependencies.Count; i < count; i++)
+            {
+                Debug.Log(string.Format("index:{0}, path:{1}", i, dependencies[i]));
+            }      
+        }
+
+        private static IEnumerable<string> GetDependencies(string path)
+        {
+            var dependencies = (from objPath in AssetDatabase.GetDependencies(new string[] { path })
+                                where objPath != path   //排除自己
+                                select objPath).Distinct();
+            return dependencies;
         }
 
         /// <summary>
